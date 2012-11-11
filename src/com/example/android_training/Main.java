@@ -27,6 +27,7 @@ public class Main extends Activity {
         Button bt11 = (Button)findViewById(R.id.button11);
         Button bt3 = (Button)findViewById(R.id.button3);
         Button bt7 = (Button)findViewById(R.id.button7);
+        Button bt5 = (Button)findViewById(R.id.button5);
         bt1.setOnClickListener(new View.OnClickListener(){
 
 			@Override
@@ -72,6 +73,15 @@ public class Main extends Activity {
 				Intent openFullScreen = new Intent("android.intent.action.FULLSCREEN");
 				startActivity(openFullScreen);
 				
+			}
+		});
+        bt5.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Intent startTicTacToe = new Intent("android.intent.action.TICTACTOE");
+				startActivity(startTicTacToe);
 			}
 		});
         		
