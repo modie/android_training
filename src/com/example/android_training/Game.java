@@ -12,8 +12,8 @@ import android.widget.Toast;
 public class Game extends View {
  
     private Cell[][] singlesquare = null;
-    int x = 5;
-    int y = 7;
+    int x = 3;
+    int y = 3;
     private int l;
     private int a;
     private boolean whatdrawn = false;
@@ -51,7 +51,7 @@ public class Game extends View {
         super(context);
  
         caneta = new Paint();
-        this.caneta.setARGB(255, 0, 0, 0);
+        this.caneta.setARGB(0, 0, 0, 0);
         this.caneta.setAntiAlias(true);
         this.caneta.setStyle(Style.STROKE);
         this.caneta.setStrokeWidth(5);
@@ -152,7 +152,8 @@ public class Game extends View {
         Cell anterior = null;
  
         for (int i = 0; i < singlesquare.length; i++) {
-            for (int j = 0; j < singlesquare[0].length; j++) {
+            for (int j = 0; j < singlesquare.length; j++) {
+            	//replaced singlesquare[0].length with singlesquare.length 
                 System.out.print(singlesquare[i][j]);
                 if (!singlesquare[i][j].equals(anterior)
                         || singlesquare[i][j] instanceof Empty) {

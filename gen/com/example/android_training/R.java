@@ -15,7 +15,10 @@ public final class R {
         public static final int cruz=0x7f020001;
         public static final int ic_action_search=0x7f020002;
         public static final int ic_launcher=0x7f020003;
-        public static final int vazio=0x7f020004;
+        public static final int pouliportok=0x7f020004;
+        public static final int pouliroz=0x7f020005;
+        public static final int tavli_resized=0x7f020006;
+        public static final int vazio=0x7f020007;
     }
     public static final class id {
         public static final int btn=0x7f080013;

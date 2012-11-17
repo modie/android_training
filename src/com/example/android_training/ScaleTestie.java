@@ -1,8 +1,11 @@
 package com.example.android_training;
 
 import java.util.Random;
+
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -86,7 +89,9 @@ public class ScaleTestie extends Activity {
  
      paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(3);
-      
+     Bitmap ppok = BitmapFactory.decodeResource(getResources(), R.drawable.pouliportok);
+     
+        
      int w = canvas.getWidth();
      int h = canvas.getHeight();
      int x = random.nextInt(w-1); 
@@ -95,6 +100,7 @@ public class ScaleTestie extends Activity {
      int g = random.nextInt(255);
      int b = random.nextInt(255);
      paint.setColor(0xff000000 + (r << 16) + (g << 8) + b);
+     
      canvas.drawPoint(x, y, paint);
       
      if(touched){
