@@ -41,6 +41,7 @@ public class TavliGame extends View{
 	private Paint paintforlines ;
 	private Paint background ; 
 	private Paint paintcheckers ;
+	private Paint paintfornumbers ;
 	Handler handler = new Handler(){
 		public void handleMessage(Message msg){
 			switch (msg.what){
@@ -55,12 +56,25 @@ public class TavliGame extends View{
 	public TavliGame(Context context,int maxh , int maxw) {
 		super(context);
 		paintforlines = new Paint();
-		this.paintforlines.setColor(Color.WHITE);
+		this.paintforlines.setARGB(0,0,0,0);
 		this.paintforlines.setAntiAlias(true);
 		this.paintforlines.setStyle(Style.STROKE);
 		this.paintforlines.setStrokeWidth(1);
+		
+		paintfornumbers = new Paint();
+		this.paintfornumbers.setAntiAlias(true);
+		this.paintfornumbers.setTextSize(30);
+		this.paintfornumbers.setColor(Color.RED);
 		max_height = maxh ;
-		max_width = maxw ;
+		int keno = 0;
+		max_width = maxw-200 ;
+		/*
+		 * TODO
+		 * this is where we set the text in the right
+		 * max_width = maxw - 200 ,will give us 200 pixels to the right :D
+		 * TODO
+		 * TODO
+		 */
 		x = (int)(max_width / 25) ;
 		y = x ;
 		int xm = max_height ;
@@ -135,7 +149,7 @@ public class TavliGame extends View{
 		int akro_deksia ;
 		
 		Bitmap board = BitmapFactory.decodeResource(getResources(), R.drawable.tavli_resized);
-		canvas.drawBitmap(board,null,new Rect(0,0,max_width,max_height), paintforlines);
+		canvas.drawBitmap(board,null,new Rect(0,0,max_width,max_height), new Paint());
 		
 		
 		canvas.drawLine(0, (xm/2),  ym , (xm/2), paintforlines);
@@ -190,6 +204,8 @@ public class TavliGame extends View{
 			}
 		}
 		*/
+		
+		/*
 		Bitmap im = BitmapFactory.decodeResource(getResources(), R.drawable.pouliportok);
 		canvas.drawBitmap(im, null,new Rect(linesVertical[0],linesHorizontal[0],linesVertical[1],linesHorizontal[1]),new Paint());
 		Bitmap yaw = BitmapFactory.decodeResource(getResources(), R.drawable.pouliroz);
@@ -198,6 +214,14 @@ public class TavliGame extends View{
 		canvas.drawBitmap(yaw,null,new Rect(linesVertical[12],linesHorizontal[0],linesVertical[13],linesHorizontal[1]),new Paint());
 		canvas.drawBitmap(yaw,null,new Rect(linesVertical[0],linesHorizontal[11],linesVertical[1],linesHorizontal[12]),new Paint());
 		canvas.drawBitmap(yaw,null,new Rect(linesVertical[12],linesHorizontal[11],linesVertical[13],linesHorizontal[12]),new Paint());
+		//gemisma mias grammis,allagma mono twn horizontal
+		canvas.drawBitmap(im, null,new Rect(linesVertical[11],linesHorizontal[11],linesVertical[12],linesHorizontal[12]),new Paint());
+		canvas.drawBitmap(im, null,new Rect(linesVertical[11],linesHorizontal[10],linesVertical[12],linesHorizontal[11]),new Paint());
+		canvas.drawBitmap(im, null,new Rect(linesVertical[11],linesHorizontal[9],linesVertical[12],linesHorizontal[10]),new Paint());
+		canvas.drawBitmap(im, null,new Rect(linesVertical[11],linesHorizontal[8],linesVertical[12],linesHorizontal[9]),new Paint());
+		canvas.drawBitmap(im, null,new Rect(linesVertical[11],linesHorizontal[7],linesVertical[12],linesHorizontal[8]),new Paint());
+		canvas.drawText("3", linesVertical[11]+x/2,linesHorizontal[7]-x/2 , paintfornumbers);
+		*/
 		/*
 		Bitmap im = BitmapFactory.decodeResource(getResources(), R.drawable.pouliportok);
 		canvas.drawBitmap(im, null,new Rect(100,100,400,400),new Paint());
@@ -261,6 +285,49 @@ public class TavliGame extends View{
 		
 		
 		
+	}
+	public Canvas drawBoard(Canvas canvas,Board board){
+		Position pos[] ;
+		Bitmap checker_color ;
+		pos = board.getPositions();
+		
+		for (int i = 0 ; i <24 ; i++){
+			if(pos[i].getCol()!=0){
+				if(pos[i].getCol()==1){
+					checker_color = BitmapFactory.decodeResource(getResources(), R.drawable.pouliportok);
+				}
+				else
+				{
+					checker_color = BitmapFactory.decodeResource(getResources(), R.drawable.pouliroz);
+				}
+			byte numberofcheckers = pos[i].getNum();
+			
+				
+				
+				
+				
+				
+				
+				
+				
+			}
+		}
+		
+		
+		
+		
+		/*gemisma mias grammis,allagma mono twn horizontal
+				canvas.drawBitmap(im, null,new Rect(linesVertical[11],linesHorizontal[11],linesVertical[12],linesHorizontal[12]),new Paint());
+				canvas.drawBitmap(im, null,new Rect(linesVertical[11],linesHorizontal[10],linesVertical[12],linesHorizontal[11]),new Paint());
+				canvas.drawBitmap(im, null,new Rect(linesVertical[11],linesHorizontal[9],linesVertical[12],linesHorizontal[10]),new Paint());
+				canvas.drawBitmap(im, null,new Rect(linesVertical[11],linesHorizontal[8],linesVertical[12],linesHorizontal[9]),new Paint());
+				canvas.drawBitmap(im, null,new Rect(linesVertical[11],linesHorizontal[7],linesVertical[12],linesHorizontal[8]),new Paint());
+				canvas.drawText("3", linesVertical[11]+x/2,linesHorizontal[7]-x/2 , paintfornumbers);
+		*/
+		
+		
+		
+		return canvas ;
 	}
 	
 	
