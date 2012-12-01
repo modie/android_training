@@ -16,9 +16,16 @@ public class WumpusGame extends View {
     int y = 10;
     private int l;
     private int a;
+    int xss ;
+    int yss ;
+    int looking_up = 2 ;
+	int looking_down = 0 ;
+	int looking_aristera = -1 ;
+	int looking_deksia = 2 ;
     private boolean whatdrawn = false;
     private int playerwin = 3;
-    private Paint caneta;
+    private Paint paint;
+    World w ;
     Handler handler = new Handler() {
         // @Override
         public void handleMessage(Message msg) {
@@ -50,25 +57,30 @@ public class WumpusGame extends View {
     public WumpusGame(Context context) {
         super(context);
  
-        caneta = new Paint();
-        this.caneta.setARGB(0, 0, 0, 0);
-        this.caneta.setAntiAlias(true);
-        this.caneta.setStyle(Style.STROKE);
-        this.caneta.setStrokeWidth(5);
+        paint = new Paint();
+        this.paint.setARGB(255, 0, 0, 0);
+        this.paint.setAntiAlias(true);
+        this.paint.setStyle(Style.STROKE);
+        this.paint.setStrokeWidth(5);
  
         l = this.getWidth();
-        a = this.getHeight();
+        a = (this.getHeight()-250);
  
         singlesquare = new Cell[x][y];
  
-        int xss = l / x;
-        int yss = a / y;
- 
+        xss = (int)(l / x);
+        yss = (int)(a / y);
+        
         for (int z = 0; z < y; z++) {
             for (int i = 0; i < x; i++) {
-                singlesquare[z][i] = new Empty(xss * i, z * yss);
+                singlesquare[z][i] = new WumpusEmpty(xss * i, z * yss);
             }
         }
+        int yaw[] = {2,8};
+		int yaw1[]= {2,5};
+		w = new World(2,5,yaw1,yaw,2,10);
+		setWorld(w) ;
+		
     }
 
 	@Override
@@ -81,18 +93,60 @@ public class WumpusGame extends View {
                         / singlesquare[0].length);
             }
         }
+        
  
-        int xs = (int)(this.getWidth() / x);
-        int ys = (int)(this.getHeight() / y);
-        for (int i = 0; i <= x; i++) {
-            canvas.drawLine(xs * i, 0, xs * i, this.getHeight(), caneta);
-        }
-        for (int i = 0; i <= y; i++) {
-            canvas.drawLine(0, ys * i, this.getWidth(), ys * i, caneta);
-        }
- 
+        
         super.onDraw(canvas);
     }
+	public void setWorld(World w){
+		int size = w.getSize();
+		int map[][] = w.getMap();
+		int player_pos_x = w.getPlayerX();
+		int player_pos_y = w.getPlayerY();
+		int looking = w.getLooking() ;
+		WumpusPit we = null ;
+		//singlesquare[2][2]= new WumpusPit(2*xss , 2 *yss);
+		
+		for (int i = 0 ; i<size ; i++)
+		{
+			//TODO player 
+			
+			System.out.println();
+			for(int y = 0 ; y < size ; y ++)
+			{
+				String s = "|";
+				if (map[i][y]== 1)
+				{
+					singlesquare[i][y] = new WumpusBlood(i*xss , yss * y);
+				}
+				else if(map[i][y]==2)
+				{
+					singlesquare[i][y]= new WumpusAura(i*xss , yss*y);
+				}
+				else if(map[i][y]==3)
+				{
+					singlesquare[i][y]= new WumpusMonster(i*xss , yss*y);
+				}
+				else if(map[i][y]==4)
+				{
+					singlesquare[i][y] =  new WumpusPit(i* xss , yss*y);
+				}
+				else if(i == player_pos_x && y == player_pos_y ){
+					
+				
+					if(map[player_pos_x][player_pos_y]==5) {
+						
+					}
+				}
+				else
+				{
+					s+="     ";
+				}
+				
+			}
+	}
+	
+	}
  
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -116,12 +170,12 @@ public class WumpusGame extends View {
         Cell cel = null;
         if (whatdrawn) 
         {
-            cel = new Cross(singlesquare[x_aux][y_aux].x,singlesquare[x_aux][y_aux].y);
+            cel = new WumpusPit(singlesquare[x_aux][y_aux].x,singlesquare[x_aux][y_aux].y);
             whatdrawn = false;
         } 
         else
         {
-            cel = new Ball(singlesquare[x_aux][y_aux].x, singlesquare[x_aux][y_aux].y);
+            cel = new WumpusBlood(singlesquare[x_aux][y_aux].x, singlesquare[x_aux][y_aux].y);
             whatdrawn = true;
         }
  
@@ -129,127 +183,11 @@ public class WumpusGame extends View {
  
         handler.sendMessage(Message.obtain(handler, 0));
  
-        if (validate_game()) {
-            if (whatdrawn) {
-                System.out.println("You Win");
-                handler.sendMessage(Message.obtain(handler, 1));
-            } else {
-                System.out.println("Computer Win");
-                handler.sendMessage(Message.obtain(handler, 2));
-            }
-            resizegame(x);
-             
-        } else if (isFull()) {
-            System.out.println("Loose");
-            handler.sendMessage(Message.obtain(handler, 3));
-            resizegame(x);
-         
-        }
     }
  
-    private boolean validate_game() {
-        int contador = 0;
-        Cell anterior = null;
+   
  
-        for (int i = 0; i < singlesquare.length; i++) {
-            for (int j = 0; j < singlesquare.length; j++) {
-            	//replaced singlesquare[0].length with singlesquare.length 
-                System.out.print(singlesquare[i][j]);
-                if (!singlesquare[i][j].equals(anterior)
-                        || singlesquare[i][j] instanceof Empty) {
- 
-                    anterior = singlesquare[i][j];
-                    contador = 0;
-                } else {
-                    contador++;
-                }
-                if (contador >= getPlayerwin() - 1) {
-                    return true;
-                }
- 
-            }
-            System.out.println("");
-            anterior = null;
-            contador = 0;
-        }
- 
-        anterior = null;
-        for (int j = 0; j < singlesquare[0].length; j++) {
-            for (int i = 0; i < singlesquare.length; i++) {
-                System.out.print(singlesquare[i][j]);
-                if (!singlesquare[i][j].equals(anterior)
-                        || singlesquare[i][j] instanceof Empty) {
-                    anterior = singlesquare[i][j];
-                    contador = 0;
-                } else {
-                    contador++;
-                }
- 
-                if (contador >= getPlayerwin() - 1) {
-                    return true;
-                }
- 
-            }
-            System.out.println("");
-            anterior = null;
-            contador = 0;
-        }
- 
-        anterior = null;
-        for (int j = singlesquare[0].length - 1; j >= 0; j--) {
-            int yau = 0;
-            for (int z = j; z < singlesquare[0].length; z++) {
-                if (!singlesquare[yau][z].equals(anterior)
-                        || singlesquare[yau][z] instanceof Empty) {
-                    anterior = singlesquare[yau][z];
-                    contador = 0;
-                } else {
-                    contador++;
-                }
- 
-                if (contador >= getPlayerwin() - 1) {
-                    return true;
-                }
-                yau++;
-            }
-            contador = 0;
-            anterior = null;
-        }
- 
-        anterior = null;
-        for (int j = 0; j < singlesquare[0].length; j++) {
-            int yau = 0;
-            for (int z = j; z >= 0; z--) {
-                if (!singlesquare[yau][z].equals(anterior)
-                        || singlesquare[yau][z] instanceof Empty) {
-                    anterior = singlesquare[yau][z];
-                    contador = 0;
-                } else {
-                    contador++;
-                }
- 
-                if (contador >= getPlayerwin() - 1) {
-                    return true;
-                }
- 
-                yau++;
-            }
-            contador = 0;
-            anterior = null;
-        }
-        return false;
-    }
- 
-    public boolean isFull() {
-        for (int i = 0; i < singlesquare.length; i++) {
-            for (int j = 0; j < singlesquare[0].length; j++) {
-                if (singlesquare[i][j] instanceof Empty) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
+    
  
     public void resizegame(int s) {
         x = s;
