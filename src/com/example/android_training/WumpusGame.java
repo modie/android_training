@@ -65,7 +65,11 @@ public class WumpusGame extends View {
  
         l = this.getWidth();
         a = (this.getHeight()-250);
- 
+        int yaw[] = {1,2};
+		int yaw1[]= {2,4};
+        w = new World(2,5,yaw1,yaw,2,7);
+        x = w.getSize();
+        y = w.getSize();
         singlesquare = new Cell[x][y];
  
         xss = (int)(l / x);
@@ -76,9 +80,7 @@ public class WumpusGame extends View {
                 singlesquare[z][i] = new WumpusEmpty(xss * i, z * yss);
             }
         }
-        int yaw[] = {2,8};
-		int yaw1[]= {2,5};
-		w = new World(2,5,yaw1,yaw,2,10);
+		
 		setWorld(w) ;
 		
     }
@@ -89,10 +91,11 @@ public class WumpusGame extends View {
             for (int j = 0; j < singlesquare[0].length; j++) {
                 singlesquare[i][j].draw(canvas, getResources(), j, i, (this
                         .getWidth() + 3)
-                        / singlesquare.length, this.getHeight()
+                        / singlesquare.length, (this.getHeight()-250)
                         / singlesquare[0].length);
             }
         }
+        
         
  
         
@@ -114,7 +117,7 @@ public class WumpusGame extends View {
 			System.out.println();
 			for(int y = 0 ; y < size ; y ++)
 			{
-				String s = "|";
+				
 				if (map[i][y]== 1)
 				{
 					singlesquare[i][y] = new WumpusBlood(i*xss , yss * y);
@@ -131,16 +134,12 @@ public class WumpusGame extends View {
 				{
 					singlesquare[i][y] =  new WumpusPit(i* xss , yss*y);
 				}
-				else if(i == player_pos_x && y == player_pos_y ){
-					
-				
-					if(map[player_pos_x][player_pos_y]==5) {
-						
-					}
-				}
-				else
+				else if(i == player_pos_x && y == player_pos_y )
 				{
-					s+="     ";
+					if(map[player_pos_x][player_pos_y]==5) 
+					{
+						singlesquare[i][y] = new WumpusHuman(i*xss , yss*y,w.getLooking());
+					}
 				}
 				
 			}
