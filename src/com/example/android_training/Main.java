@@ -29,6 +29,16 @@ public class Main extends Activity {
         Button bt7 = (Button)findViewById(R.id.button7);
         Button bt5 = (Button)findViewById(R.id.button5);
         Button bt4 = (Button)findViewById(R.id.button4);
+        Button bt6 = (Button)findViewById(R.id.button6);
+        bt6.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				Intent openWumpus = new Intent("android.intent.action.WUMPUS");
+				startActivity(openWumpus);
+				
+			}
+		});
         bt1.setOnClickListener(new View.OnClickListener(){
 
 			@Override
