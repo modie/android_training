@@ -36,10 +36,15 @@ public class World {
 		//enter monster 
 		map[monster_x][monster_y]= 3 ;
 		//enter values around monster S=1 
+		if(!((monster_x+1)>=size)){
+			map[monster_x+1][monster_y]=1 ;
+		}
 		map[monster_x-1][monster_y]=1 ;
-		map[monster_x+1][monster_y]=1 ;
 		map[monster_x][monster_y-1]=1 ;
-		map[monster_x][monster_y+1]=1 ;
+		if(!((monster_y+1)>=size))
+		{
+			map[monster_x][monster_y+1]=1 ;
+		}
 		//enter pits , L == 4;
 		for(int i =0 ;i<lakouves_x.length ; i++)
 		{
@@ -54,9 +59,15 @@ public class World {
 		{
 			int lx = lakouves_x[i];
 			int ly = lakouves_y[i];
-			map[lx+1][ly]=2 ;
+			if(!(lx+1>=size))
+			{
+				map[lx+1][ly]=2 ;
+			}
 			map[lx-1][ly]=2 ;
-			map[lx][ly+1]=2 ;
+			if(!(ly+1>=size))
+			{
+				map[lx][ly+1]=2 ;
+			}
 			map[lx][ly-1]=2 ;
 		}
 		map[player_pos_x][player_pos_y]= 5 ;//our playa 
@@ -79,6 +90,10 @@ public class World {
 	}
 	public int getLooking(){
 		return looking ;
+	}
+	public void setLooking(int i)
+	{
+		looking = i ;
 	}
 	public void printWorld()
 	{

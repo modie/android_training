@@ -24,9 +24,10 @@ public final class R {
         public static final int roomnasty=0x7f02000a;
         public static final int roompit=0x7f02000b;
         public static final int roomslime=0x7f02000c;
-        public static final int tavli_resized=0x7f02000d;
-        public static final int vazio=0x7f02000e;
-        public static final int wumpus=0x7f02000f;
+        public static final int rotate_left=0x7f02000d;
+        public static final int tavli_resized=0x7f02000e;
+        public static final int vazio=0x7f02000f;
+        public static final int wumpus=0x7f020010;
     }
     public static final class id {
         public static final int btn=0x7f080013;
@@ -57,8 +58,9 @@ public final class R {
         public static final int activity_main=0x7f030000;
         public static final int activity_text=0x7f030001;
         public static final int activity_thread=0x7f030002;
-        public static final int fullscreen=0x7f030003;
-        public static final int thread1=0x7f030004;
+        public static final int android_yaw=0x7f030003;
+        public static final int fullscreen=0x7f030004;
+        public static final int thread1=0x7f030005;
     }
     public static final class menu {
         public static final int activity_main=0x7f070000;

@@ -1,5 +1,7 @@
 package com.example.android_training;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
@@ -21,7 +23,7 @@ public class WumpusGame extends View {
     int looking_up = 2 ;
 	int looking_down = 0 ;
 	int looking_aristera = -1 ;
-	int looking_deksia = 2 ;
+	int looking_deksia = 1 ;
     private boolean whatdrawn = false;
     private int playerwin = 3;
     private Paint paint;
@@ -31,7 +33,9 @@ public class WumpusGame extends View {
         public void handleMessage(Message msg) {
             switch (msg.what) {
             case 0:
-                invalidate();
+            	//invalidate comes there ..
+            	invalidate();
+               
                 break;
             case 1:
                 Toast.makeText(getContext(), "You Win!", Toast.LENGTH_SHORT).show();
@@ -67,7 +71,7 @@ public class WumpusGame extends View {
         a = (this.getHeight()-250);
         int yaw[] = {1,2};
 		int yaw1[]= {2,4};
-        w = new World(2,5,yaw1,yaw,2,7);
+        w = new World(4,5,yaw1,yaw,2,7);
         x = w.getSize();
         y = w.getSize();
         singlesquare = new Cell[x][y];
@@ -80,24 +84,26 @@ public class WumpusGame extends View {
                 singlesquare[z][i] = new WumpusEmpty(xss * i, z * yss);
             }
         }
-		
 		setWorld(w) ;
 		
     }
 
 	@Override
     protected void onDraw(Canvas canvas) {
+		
+		int max_height = this.getHeight()- 250 ;
         for (int i = 0; i < singlesquare.length; i++) {
             for (int j = 0; j < singlesquare[0].length; j++) {
                 singlesquare[i][j].draw(canvas, getResources(), j, i, (this
                         .getWidth() + 3)
-                        / singlesquare.length, (this.getHeight()-250)
+                        / singlesquare.length, (max_height)
                         / singlesquare[0].length);
             }
         }
+        Bitmap rotate_left = BitmapFactory.decodeResource(getResources(), R.drawable.rotate_left);
+        Bitmap new_rotate_left = Bitmap.createScaledBitmap(rotate_left, 120, 120, true);
+        canvas.drawBitmap(new_rotate_left, this.getWidth()-120, max_height, paint);
         
-        
- 
         
         super.onDraw(canvas);
     }
@@ -112,7 +118,7 @@ public class WumpusGame extends View {
 		
 		for (int i = 0 ; i<size ; i++)
 		{
-			//TODO player 
+			
 			
 			System.out.println();
 			for(int y = 0 ; y < size ; y ++)
@@ -150,9 +156,40 @@ public class WumpusGame extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         int x_aux = (int) (event.getX() / (this.getWidth() / x));
-        int y_aux = (int) (event.getY() / (this.getHeight() / y));
-        drawimage(x_aux, y_aux);
-        return super.onTouchEvent(event);
+        int y_aux = (int) event.getY();
+        if(event.getAction() == event.ACTION_UP){
+        dosomeshit();
+        }
+        	//last try ;
+        //after that try i m gonna go to surfaceview = gg :)
+        
+        return true;
+    }
+    public void dosomeshit(){
+    	int l = w.getLooking();
+    	int lnew =-1;
+    	if(l == 0 )
+    	{
+    		lnew = -1 ;
+    	}
+    	else if(l == 2)
+    	{
+    		lnew = 1 ;
+    	}
+    	else if(l == 1)
+    	{
+    		lnew= 0 ;
+    	}
+    	else if(l == -1)
+    	{
+    		lnew = 2 ;
+    	}
+    	w.setLooking(lnew);
+    	singlesquare[w.getPlayerX()][w.getPlayerY()]= new WumpusHuman(w.getPlayerX()*xss , yss*w.getPlayerY(),lnew);
+    	
+    	
+    
+    handler.sendMessage(Message.obtain(handler, 0));
     }
  
     public String getPiece(int player) {
