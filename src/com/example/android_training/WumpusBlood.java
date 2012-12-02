@@ -30,4 +30,10 @@ public class WumpusBlood extends Cell {
     public String toString() {
         return " ";
     }
+
+	@Override
+	public int Drawable() {
+		// TODO Auto-generated method stub
+		return R.drawable.roomblood;
+	}
 }

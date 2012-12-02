@@ -27,13 +27,13 @@ public class Game extends View {
                 invalidate();
                 break;
             case 1:
-                Toast.makeText(getContext(), "You Win!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "You Win!", Toast.LENGTH_LONG).show();
                 break;
             case 2:
-                Toast.makeText(getContext(), "Computer Win!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Computer Win!", Toast.LENGTH_LONG).show();
                 break;
             case 3:
-                Toast.makeText(getContext(), "Loose!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Loose!", Toast.LENGTH_LONG).show();
                 break;
             default:
                 break;

@@ -31,4 +31,8 @@ public class WumpusAura extends Cell {
     public String toString() {
         return " ";
     }
+    public int Drawable(){
+    	
+    	return R.drawable.roomslime ;
+    }
 }

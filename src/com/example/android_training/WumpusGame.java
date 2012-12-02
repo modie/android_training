@@ -3,6 +3,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.os.Handler;
@@ -12,7 +13,6 @@ import android.view.View;
 import android.widget.Toast;
  
 public class WumpusGame extends View {
- 
     private Cell[][] singlesquare = null;
     int x = 10;
     int y = 10;
@@ -38,14 +38,26 @@ public class WumpusGame extends View {
                
                 break;
             case 1:
-                Toast.makeText(getContext(), "You Win!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Wumpus dead", Toast.LENGTH_LONG).show();
                 break;
             case 2:
-                Toast.makeText(getContext(), "Computer Win!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Wumpus dead NOT", Toast.LENGTH_LONG).show();
                 break;
             case 3:
-                Toast.makeText(getContext(), "Loose!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Treasure Found-Win", Toast.LENGTH_LONG).show();
                 break;
+            case 4:
+            	Toast.makeText(getContext(), "Yaw since u are not columbus", Toast.LENGTH_SHORT).show();
+            	Toast.makeText(getContext(), "there is nothing there", Toast.LENGTH_SHORT).show();
+            	//there is nothing there
+            	break;
+            case 5:
+            	Toast.makeText(getContext(), "Haha fell into pit ", Toast.LENGTH_LONG).show();
+            	newWorld();
+            	break;
+            case 6:
+            	Toast.makeText(getContext(), "Haha wumpus made love with ya", Toast.LENGTH_LONG).show();
+            	break;
             default:
                 break;
             }
@@ -66,10 +78,12 @@ public class WumpusGame extends View {
         this.paint.setAntiAlias(true);
         this.paint.setStyle(Style.STROKE);
         this.paint.setStrokeWidth(5);
- 
+        
+        
         l = this.getWidth();
         a = (this.getHeight()-250);
-        int yaw[] = {1,2};
+        newWorld();
+        /*int yaw[] = {1,2};
 		int yaw1[]= {2,4};
         w = new World(4,5,yaw1,yaw,2,7);
         x = w.getSize();
@@ -85,9 +99,30 @@ public class WumpusGame extends View {
             }
         }
 		setWorld(w) ;
+		*/
 		
     }
 
+	
+	public void newWorld()
+	{
+		int yaw[] = {1,2};
+		int yaw1[]= {2,4};
+        w = new World(4,5,yaw1,yaw,2,7);
+        x = w.getSize();
+        y = w.getSize();
+        singlesquare = new Cell[x][y];
+ 
+        xss = (int)(l / x);
+        yss = (int)(a / y);
+        
+        for (int z = 0; z < y; z++) {
+            for (int i = 0; i < x; i++) {
+                singlesquare[z][i] = new WumpusEmpty(xss * i, z * yss);
+            }
+        }
+		setWorld(w) ;
+	}
 	@Override
     protected void onDraw(Canvas canvas) {
 		
@@ -100,10 +135,18 @@ public class WumpusGame extends View {
                         / singlesquare[0].length);
             }
         }
-        Bitmap rotate_left = BitmapFactory.decodeResource(getResources(), R.drawable.rotate_left);
+        //button to rotate right
+        Bitmap rotate_right = BitmapFactory.decodeResource(getResources(), R.drawable.redo);
+        Bitmap new_rotate_right = Bitmap.createScaledBitmap(rotate_right, 120, 120, true);
+        canvas.drawBitmap(new_rotate_right, this.getWidth()-120, max_height, paint);
+        //button to rotate left
+        Bitmap rotate_left = BitmapFactory.decodeResource(getResources(), R.drawable.redo1);
         Bitmap new_rotate_left = Bitmap.createScaledBitmap(rotate_left, 120, 120, true);
-        canvas.drawBitmap(new_rotate_left, this.getWidth()-120, max_height, paint);
-        
+        canvas.drawBitmap(new_rotate_left,0,max_height,paint);
+        //button to move
+        Bitmap BtnMove = BitmapFactory.decodeResource(getResources(), R.drawable.move);
+        Bitmap newBtnMove = Bitmap.createScaledBitmap(BtnMove, this.getWidth()-240, 120, true);
+        canvas.drawBitmap(newBtnMove,120 , max_height , paint);
         
         super.onDraw(canvas);
     }
@@ -123,6 +166,7 @@ public class WumpusGame extends View {
 			System.out.println();
 			for(int y = 0 ; y < size ; y ++)
 			{
+				
 				
 				if (map[i][y]== 1)
 				{
@@ -155,17 +199,26 @@ public class WumpusGame extends View {
  
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        int x_aux = (int) (event.getX() / (this.getWidth() / x));
-        int y_aux = (int) event.getY();
-        if(event.getAction() == event.ACTION_UP){
-        dosomeshit();
+        int x_aux = (int) (event.getX());
+        int y_aux = (int) (event.getY());
+        if(x_aux >=this.getWidth()-120 && event.getAction() == event.ACTION_UP){
+        rotateRight();
         }
-        	//last try ;
-        //after that try i m gonna go to surfaceview = gg :)
+        else if(x_aux <=120 && event.getAction() == event.ACTION_UP)
+        {
+        	rotateLeft();
+        }
+        else if(x_aux >120 && x_aux < this.getWidth()-120 && event.getAction() == event.ACTION_UP)
+        {
+        	move();
+        }
+        
+        
         
         return true;
     }
-    public void dosomeshit(){
+    public void rotateRight()
+    {
     	int l = w.getLooking();
     	int lnew =-1;
     	if(l == 0 )
@@ -185,64 +238,181 @@ public class WumpusGame extends View {
     		lnew = 2 ;
     	}
     	w.setLooking(lnew);
-    	singlesquare[w.getPlayerX()][w.getPlayerY()]= new WumpusHuman(w.getPlayerX()*xss , yss*w.getPlayerY(),lnew);
+    	singlesquare[w.getPlayerX()][w.getPlayerY()]= new WumpusHuman(w.getPlayerX()*xss , yss*w.getPlayerY(),lnew,whatWasBeforeLanding(w.getPlayerX(),w.getPlayerY()));
     	
     	
     
     handler.sendMessage(Message.obtain(handler, 0));
     }
- 
-    public String getPiece(int player) {
-        switch (player) {
-        case 1:
-            return "x";
-        case -1:
-            return "o";
-        }
-        return null;
+    public void rotateLeft()
+    {
+    	
+    	int l = w.getLooking();
+    	int lnew =-1;
+    	
+    	if(l == 0 )
+    	{
+    		lnew = 1 ;
+    	}
+    	else if(l == 2)
+    	{
+    		lnew = -1 ;
+    	}
+    	else if(l == 1)
+    	{
+    		lnew= 2 ;
+    	}
+    	else if(l == -1)
+    	{
+    		lnew = 0 ;
+    	}
+    	w.setLooking(lnew);
+    	singlesquare[w.getPlayerX()][w.getPlayerY()]= new WumpusHuman(w.getPlayerX()*xss , yss*w.getPlayerY(),lnew,whatWasBeforeLanding(w.getPlayerX(), w.getPlayerY()));
+    	
+    	
+    
+    handler.sendMessage(Message.obtain(handler, 0));
     }
- 
-    public void drawimage(int x_aux, int y_aux) {
-        Cell cel = null;
-        if (whatdrawn) 
-        {
-            cel = new WumpusPit(singlesquare[x_aux][y_aux].x,singlesquare[x_aux][y_aux].y);
-            whatdrawn = false;
-        } 
-        else
-        {
-            cel = new WumpusBlood(singlesquare[x_aux][y_aux].x, singlesquare[x_aux][y_aux].y);
-            whatdrawn = true;
-        }
- 
-        singlesquare[y_aux][x_aux] = cel;
- 
-        handler.sendMessage(Message.obtain(handler, 0));
- 
+    public void move()
+    {
+    	int oldmap[][] = w.getMap();
+    	WumpusPit pit = null;
+    	WumpusMonster  mon = null ;
+    	//TODO add here for treasure WumpusTreasure tres = null ;
+    	int l = w.getLooking();
+    	int xprev = w.getPlayerX();
+    	int yprev = w.getPlayerY();
+    	int xnew = xprev ;
+    	int ynew = yprev ;
+    	int whatwasBeforeLanding = R.drawable.roombase;
+    	
+    	if (l == 2)
+    	{
+    		if(xprev -1 >=0 ){
+    			if(w.getId(xprev-1, yprev) ==4){
+    				handler.sendMessage(Message.obtain(handler,5));
+    				
+    			}
+    			else if(w.getId(xprev-1, yprev) ==3)
+    			{
+    				handler.sendMessage(Message.obtain(handler,6));
+    			}
+    			else{
+		    		xnew = xprev -1 ;
+		    		whatwasBeforeLanding =whatWasBeforeLanding(xnew, ynew);
+		    	}
+    		}
+    		else{
+    			handler.sendMessage(Message.obtain(handler, 4));
+    		}
+    		ynew = yprev ;
+    		
+    		
+    	}
+    	else if( l == 1)
+    	{
+    		xnew = xprev ;
+    		if (yprev +1 <w.getSize()){
+    			if( w.getId(xnew, yprev+1) ==4 ){
+    				handler.sendMessage(Message.obtain(handler,5));
+    				
+    			}
+    			else if( w.getId(xnew, yprev+1) ==3)
+    			{
+    				handler.sendMessage(Message.obtain(handler,6));
+    			}
+    			else{
+		    		ynew = yprev + 1 ;
+		    		whatwasBeforeLanding =whatWasBeforeLanding(xnew, ynew);
+    			}
+    		}
+    		else{
+    			handler.sendMessage(Message.obtain(handler, 4));
+    		}
+    	}
+    	else if( l == 0)
+    	{
+    		if(xprev+1 < w.getSize()){
+    			if(w.getId(xprev+1, yprev) ==4 ){
+    				handler.sendMessage(Message.obtain(handler,5));
+    				
+    			}
+    			else if(w.getId(xprev+1, yprev) ==3 )
+    			{
+    				handler.sendMessage(Message.obtain(handler,6));
+    			}
+    			else{
+		    		xnew = xprev +1 ;
+		    		whatwasBeforeLanding =whatWasBeforeLanding(xnew, ynew);
+	    		}
+    		}
+    		else{
+    			handler.sendMessage(Message.obtain(handler, 4));
+    		}
+    		ynew = yprev ;
+    	}
+    	else if(l==-1)
+    	{
+    		xnew = xprev ;
+    		if(yprev - 1 >=0){
+    			if(w.getId(xprev, yprev-1) ==4 )
+    			{
+    				handler.sendMessage(Message.obtain(handler,5));
+    			}
+    			else if(w.getId(xprev, yprev-1) ==3 )
+    			{
+    				handler.sendMessage(Message.obtain(handler,6));
+    			}
+    			else
+    			{
+		    		ynew = yprev -1;
+		    		whatwasBeforeLanding =whatWasBeforeLanding(xnew, ynew);
+    			}
+    		}else{
+    			handler.sendMessage(Message.obtain(handler, 4));
+    		}
+    	}
+    	
+    	w.Movement(xnew, ynew);
+    	if (oldmap[xprev][yprev]== 1)
+		{
+			singlesquare[xprev][yprev] = new WumpusBlood(xprev*xss , yss * yprev);
+		}
+		else if(oldmap[xprev][yprev]==2)
+		{
+			singlesquare[xprev][yprev]= new WumpusAura(xprev*xss , yss*yprev);
+		}
+		else if(oldmap[xprev][yprev]==3)
+		{
+			singlesquare[xprev][yprev]= new WumpusMonster(xprev*xss , yss*yprev);
+		}
+		else if(oldmap[xprev][yprev]==4)
+		{
+			singlesquare[xprev][yprev] =  new WumpusPit(xprev* xss , yss*yprev);
+		}
+		else if(oldmap[xprev][yprev]==0)
+		{
+			singlesquare[xprev][yprev] = new WumpusEmpty(xprev*xss, yprev*yss);
+		}
+		
+    	singlesquare[w.getPlayerX()][w.getPlayerY()]= new WumpusHuman(w.getPlayerX()*xss , yss*w.getPlayerY(),l,whatwasBeforeLanding);
+    	
+    	handler.sendMessage(Message.obtain(handler, 0));
     }
- 
-   
+    public int whatWasBeforeLanding(int x,int y){
+    	return  singlesquare[x][y].Drawable();
+    }
  
     
  
-    public void resizegame(int s) {
-        x = s;
-        y = s;
+   
  
-        singlesquare = new Cell[x][y];
+    //TODO
+    //TODO
+    //TODO
+    //TODO
+    //fixe aura/blood when rotating :D
+   
  
-        int xss = l / x;
-        int yss = a / y;
- 
-        for (int z = 0; z < y; z++) {
-            for (int i = 0; i < x; i++) {
-                singlesquare[z][i] = new Empty(xss * i, z * yss);
-            }
-        }
-        handler.sendMessage(Message.obtain(handler, 0));
-    }
-     
-    public int getPlayerwin() {
-        return playerwin;
-    }
+    
 }

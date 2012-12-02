@@ -31,4 +31,10 @@ public class Cross extends Cell {
     public String toString() {
         return "X";
     }
+
+	@Override
+	public int Drawable() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

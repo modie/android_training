@@ -14,6 +14,8 @@ public class World {
 	int size ;
 	int map[][] ;
 	int looking ; // 2 gia panw , 1 gia deksia , -1 gia aristera , 0 gia katw .
+	//TODO add treasure :D
+	//TODO 
 	World(int mx , int my , int lkx[],int lky[],int looking,int size)
 	{
 		this.looking = looking ;
@@ -22,7 +24,8 @@ public class World {
 		lakouves_x = lkx ;
 		lakouves_y = lky ;
 		this.size = size ;
-		player_pos_x = size- 1;
+		player_pos_x
+		= size- 1;
 		map = new int[size][size];
 		
 		EnterValues();
@@ -94,6 +97,10 @@ public class World {
 	public void setLooking(int i)
 	{
 		looking = i ;
+	}
+	public int getId(int x, int y)
+	{
+		return map[x][y];
 	}
 	public void printWorld()
 	{

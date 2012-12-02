@@ -31,4 +31,10 @@ public class Ball extends Cell {
     public String toString() {
         return "O";
     }
+
+	@Override
+	public int Drawable() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

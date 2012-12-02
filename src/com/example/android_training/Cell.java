@@ -11,4 +11,5 @@ public abstract class Cell extends Point {
     }
  
     abstract public void draw(Canvas g,Resources res, int x, int y, int w, int h);
+    abstract public int Drawable();
 }

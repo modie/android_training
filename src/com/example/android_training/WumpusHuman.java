@@ -17,13 +17,21 @@ int looking_deksia = 1 ;
  */
 public class WumpusHuman extends Cell {
 	int looking ;
+	int baseDrawing ;
+	int drawBefore = R.drawable.roombase;
     public WumpusHuman(int x, int y,int looking) {
         super(x, y);
         this.looking = looking ;
     }
+    public WumpusHuman(int x,int y,int looking,int drawBefore)
+    {
+    	super(x,y);
+    	this.looking = looking ;
+    	this.drawBefore = drawBefore;
+    }
  
     public void draw(Canvas g, Resources res, int x, int y, int w, int h) {
-    Bitmap im = BitmapFactory.decodeResource(res, R.drawable.roombase);
+    Bitmap im = BitmapFactory.decodeResource(res, drawBefore);
     g.drawBitmap(im, null, new Rect(x*w, y*h, (x*w)+w, (y*h)+h), new Paint());
     Bitmap human = BitmapFactory.decodeResource(res, R.drawable.playern);
     Matrix matrix = new Matrix();
@@ -60,4 +68,10 @@ public class WumpusHuman extends Cell {
     public String toString() {
         return " ";
     }
+	@Override
+	public int Drawable() {
+		// TODO Auto-generated method stub
+		return drawBefore ;
+	}
+    
 }
