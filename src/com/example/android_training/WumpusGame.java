@@ -18,14 +18,13 @@ public class WumpusGame extends View {
     int y = 10;
     private int l;
     private int a;
+    Cell arxiko ;
     int xss ;
     int yss ;
     int looking_up = 2 ;
 	int looking_down = 0 ;
 	int looking_aristera = -1 ;
 	int looking_deksia = 1 ;
-    private boolean whatdrawn = false;
-    private int playerwin = 3;
     private Paint paint;
     World w ;
     Handler handler = new Handler() {
@@ -49,6 +48,9 @@ public class WumpusGame extends View {
             case 4:
             	Toast.makeText(getContext(), "Yaw since u are not columbus", Toast.LENGTH_SHORT).show();
             	Toast.makeText(getContext(), "there is nothing there", Toast.LENGTH_SHORT).show();
+            	Toast.makeText(getContext(), "U MAD ?", Toast.LENGTH_SHORT).show();
+            	Toast.makeText(getContext(), "SOOOOOOOOOO MAD", Toast.LENGTH_SHORT).show();
+            	
             	//there is nothing there
             	break;
             case 5:
@@ -57,6 +59,7 @@ public class WumpusGame extends View {
             	break;
             case 6:
             	Toast.makeText(getContext(), "Haha wumpus made love with ya", Toast.LENGTH_LONG).show();
+            	newWorld();
             	break;
             default:
                 break;
@@ -107,7 +110,7 @@ public class WumpusGame extends View {
 	public void newWorld()
 	{
 		int yaw[] = {1,2};
-		int yaw1[]= {2,4};
+		int yaw1[]= {6,4};
         w = new World(4,5,yaw1,yaw,2,7);
         x = w.getSize();
         y = w.getSize();
@@ -122,6 +125,8 @@ public class WumpusGame extends View {
             }
         }
 		setWorld(w) ;
+		
+		
 	}
 	@Override
     protected void onDraw(Canvas canvas) {
@@ -184,15 +189,27 @@ public class WumpusGame extends View {
 				{
 					singlesquare[i][y] =  new WumpusPit(i* xss , yss*y);
 				}
-				else if(i == player_pos_x && y == player_pos_y )
+				/*else if(i == player_pos_x && y == player_pos_y )
 				{
 					if(map[player_pos_x][player_pos_y]==5) 
 					{
-						singlesquare[i][y] = new WumpusHuman(i*xss , yss*y,w.getLooking());
+						singlesquare[i][y] = new WumpusHuman(i*xss , yss*y,w.getLooking(),R.drawable.roombase);
+						if(map[player_pos_x][player_pos_y]==1){
+							arxiko = new WumpusBlood(i*xss, y*yss);
+						}else if(map[player_pos_x][player_pos_y]==2)
+						{
+							arxiko = new WumpusAura(i*xss, y*yss);
+						}
+						else{
+						arxiko = new WumpusEmpty(i*xss, yss*y);
+						}
 					}
 				}
+				*/
+				
 				
 			}
+			singlesquare[w.getPlayerX()][w.getPlayerY()]= new WumpusHuman(w.getPlayerX()*xss , yss*w.getPlayerY(),w.getLooking(),whatWasBeforeLanding(player_pos_x, player_pos_y));
 	}
 	
 	}
@@ -276,8 +293,6 @@ public class WumpusGame extends View {
     public void move()
     {
     	int oldmap[][] = w.getMap();
-    	WumpusPit pit = null;
-    	WumpusMonster  mon = null ;
     	//TODO add here for treasure WumpusTreasure tres = null ;
     	int l = w.getLooking();
     	int xprev = w.getPlayerX();
@@ -285,6 +300,8 @@ public class WumpusGame extends View {
     	int xnew = xprev ;
     	int ynew = yprev ;
     	int whatwasBeforeLanding = R.drawable.roombase;
+    	  		
+    	
     	
     	if (l == 2)
     	{
@@ -394,6 +411,7 @@ public class WumpusGame extends View {
 		{
 			singlesquare[xprev][yprev] = new WumpusEmpty(xprev*xss, yprev*yss);
 		}
+    	
 		
     	singlesquare[w.getPlayerX()][w.getPlayerY()]= new WumpusHuman(w.getPlayerX()*xss , yss*w.getPlayerY(),l,whatwasBeforeLanding);
     	
@@ -408,10 +426,9 @@ public class WumpusGame extends View {
    
  
     //TODO
-    //TODO
-    //TODO
-    //TODO
-    //fixe aura/blood when rotating :D
+    //TODO na valw thisauro 
+    //TODO na vgalw ton paikti apo tin arxiki thesi
+    //TODO shadows reveal[x][y] (OR MAYBE NOT ?)
    
  
     

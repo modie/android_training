@@ -73,7 +73,7 @@ public class World {
 			}
 			map[lx][ly-1]=2 ;
 		}
-		map[player_pos_x][player_pos_y]= 5 ;//our playa 
+		//map[player_pos_x][player_pos_y]= 5 ;//our playa 
 		
 		
 		
