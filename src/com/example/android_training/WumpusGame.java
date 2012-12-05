@@ -1,11 +1,13 @@
 package com.example.android_training;
+import java.util.Random;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
+import android.graphics.Point;
 import android.os.Handler;
 import android.os.Message;
 import android.view.MotionEvent;
@@ -18,6 +20,7 @@ public class WumpusGame extends View {
     int y = 10;
     private int l;
     private int a;
+    int map[][];
     Cell arxiko ;
     int xss ;
     int yss ;
@@ -61,6 +64,17 @@ public class WumpusGame extends View {
             	Toast.makeText(getContext(), "Haha wumpus made love with ya", Toast.LENGTH_LONG).show();
             	newWorld();
             	break;
+            case 7 : 
+            	Toast.makeText(getContext(), "U FOUND TREASURE ", Toast.LENGTH_LONG).show();
+            	newWorld() ;
+            	break;
+            case 10 :
+            	try {
+					wait(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
             default:
                 break;
             }
@@ -71,6 +85,23 @@ public class WumpusGame extends View {
  
     public int getGameSize() {
         return x;
+    }
+    public Point makeMove(){
+    	Random r = new Random();
+    	int choice = r.nextInt(4);
+    	switch(choice){
+    	case 0:move();
+    	break;
+    	case 1:rotateLeft();
+			
+    	break;
+    	case 2:rotateRight();
+    	
+    	break;
+    	
+    	}
+    	Point p = new Point(w.getPlayerX(),w.getPlayerY());
+    	return p ;
     }
  
     public WumpusGame(Context context) {
@@ -104,14 +135,21 @@ public class WumpusGame extends View {
 		setWorld(w) ;
 		*/
 		
+		
+		//while(true){
+		//	th.run();
+		//}
+        
+		
+		
     }
 
 	
 	public void newWorld()
 	{
-		int yaw[] = {1,2};
-		int yaw1[]= {6,4};
-        w = new World(4,5,yaw1,yaw,2,7);
+		int yaw[] = {1};//,4,6,2};
+		int yaw1[]= {6};//,4,0,0};
+        w = new World(4,6,yaw,yaw1,2,7 , 6 , 6);
         x = w.getSize();
         y = w.getSize();
         singlesquare = new Cell[x][y];
@@ -127,6 +165,9 @@ public class WumpusGame extends View {
 		setWorld(w) ;
 		
 		
+	}
+	public int[][] getMap(){
+		return map;
 	}
 	@Override
     protected void onDraw(Canvas canvas) {
@@ -157,7 +198,7 @@ public class WumpusGame extends View {
     }
 	public void setWorld(World w){
 		int size = w.getSize();
-		int map[][] = w.getMap();
+		map = w.getMap();
 		int player_pos_x = w.getPlayerX();
 		int player_pos_y = w.getPlayerY();
 		int looking = w.getLooking() ;
@@ -189,23 +230,16 @@ public class WumpusGame extends View {
 				{
 					singlesquare[i][y] =  new WumpusPit(i* xss , yss*y);
 				}
-				/*else if(i == player_pos_x && y == player_pos_y )
+				else if(map[i][y]==5)
 				{
-					if(map[player_pos_x][player_pos_y]==5) 
-					{
-						singlesquare[i][y] = new WumpusHuman(i*xss , yss*y,w.getLooking(),R.drawable.roombase);
-						if(map[player_pos_x][player_pos_y]==1){
-							arxiko = new WumpusBlood(i*xss, y*yss);
-						}else if(map[player_pos_x][player_pos_y]==2)
-						{
-							arxiko = new WumpusAura(i*xss, y*yss);
-						}
-						else{
-						arxiko = new WumpusEmpty(i*xss, yss*y);
-						}
-					}
+					singlesquare[i][y] = new WumpusBloodyAura(i*xss, y*yss);
 				}
-				*/
+				else if(map[i][y]==6)
+				{
+					singlesquare[i][y] = new WumpusTreasure(i*xss, y*yss);
+				}
+				//TODO add treasure here :D
+				
 				
 				
 			}
@@ -314,6 +348,10 @@ public class WumpusGame extends View {
     			{
     				handler.sendMessage(Message.obtain(handler,6));
     			}
+    			else if(w.getId(xprev-1, yprev) ==6)
+    			{
+    				handler.sendMessage(Message.obtain(handler,7));
+    			}
     			else{
 		    		xnew = xprev -1 ;
 		    		whatwasBeforeLanding =whatWasBeforeLanding(xnew, ynew);
@@ -338,6 +376,10 @@ public class WumpusGame extends View {
     			{
     				handler.sendMessage(Message.obtain(handler,6));
     			}
+    			else if( w.getId(xnew, yprev+1) ==6)
+    			{
+    				handler.sendMessage(Message.obtain(handler,7));
+    			}
     			else{
 		    		ynew = yprev + 1 ;
 		    		whatwasBeforeLanding =whatWasBeforeLanding(xnew, ynew);
@@ -358,6 +400,11 @@ public class WumpusGame extends View {
     			{
     				handler.sendMessage(Message.obtain(handler,6));
     			}
+    			else if(w.getId(xprev+1, yprev) ==6 )
+    			{
+    				handler.sendMessage(Message.obtain(handler,7));
+    			}
+    			
     			else{
 		    		xnew = xprev +1 ;
 		    		whatwasBeforeLanding =whatWasBeforeLanding(xnew, ynew);
@@ -379,6 +426,10 @@ public class WumpusGame extends View {
     			else if(w.getId(xprev, yprev-1) ==3 )
     			{
     				handler.sendMessage(Message.obtain(handler,6));
+    			}
+    			else if(w.getId(xprev, yprev-1) ==6)
+    			{
+    				handler.sendMessage(Message.obtain(handler,7));
     			}
     			else
     			{
@@ -411,6 +462,10 @@ public class WumpusGame extends View {
 		{
 			singlesquare[xprev][yprev] = new WumpusEmpty(xprev*xss, yprev*yss);
 		}
+		else if(oldmap[xprev][yprev]==5)
+		{
+			singlesquare[xprev][yprev] = new WumpusBloodyAura(xprev*xss, yprev*yss);
+		}
     	
 		
     	singlesquare[w.getPlayerX()][w.getPlayerY()]= new WumpusHuman(w.getPlayerX()*xss , yss*w.getPlayerY(),l,whatwasBeforeLanding);
@@ -420,6 +475,39 @@ public class WumpusGame extends View {
     public int whatWasBeforeLanding(int x,int y){
     	return  singlesquare[x][y].Drawable();
     }
+    public void moveUp(){
+    	if(w.getLooking()==2)
+    	{
+    		move();
+    	}
+    	else if(w.getLooking()==1)
+    	{
+    		rotateLeft();
+    		move();
+    	}
+    	else if(w.getLooking()==-1)
+    	{
+    		rotateRight();
+    		move();
+    	}
+    	else if(w.getLooking()==0){
+    		rotateRight();
+    		rotateRight();
+    		move();
+    	}
+    }
+    public void moveRight()
+    {
+    	if(w.getLooking()==2)
+    	{
+    		rotateRight();
+    		move();
+    	}
+    	else if(w.getLooking()==1)
+    	{
+    		
+    	}
+    }
  
     
  
@@ -427,8 +515,7 @@ public class WumpusGame extends View {
  
     //TODO
     //TODO na valw thisauro 
-    //TODO na vgalw ton paikti apo tin arxiki thesi
-    //TODO shadows reveal[x][y] (OR MAYBE NOT ?)
+    //TODO shadows reveal[x][y] (OR MAYBE NOT ?) SURE NOT :D
    
  
     

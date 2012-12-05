@@ -29,7 +29,7 @@ public class WumpusPit extends Cell {
     }
     @Override
     public String toString() {
-        return " ";
+        return "PIT";
     }
 
 	@Override
