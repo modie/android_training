@@ -41,6 +41,9 @@ public class Wumpus extends Activity{
 						
 						p = wg.makeMove();  // p wg.makeMove(wa.decide(p.x,p.y));
 						wa.setRoom(p.x, p.y, map[p.x][p.y]);
+						wa.setLocation(p);
+						//update and getting moves 
+						//then doing moves 
 						if(wa.getRoom(p.x, p.y).isBlood() )
 						{
 							break;
@@ -52,7 +55,7 @@ public class Wumpus extends Activity{
 				}
 			}
 		};
-		t.start();
+		//t.start();
 		
 	}
 	@SuppressWarnings("deprecation")

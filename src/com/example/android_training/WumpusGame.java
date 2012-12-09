@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Point;
@@ -29,6 +30,7 @@ public class WumpusGame extends View {
 	int looking_aristera = -1 ;
 	int looking_deksia = 1 ;
     private Paint paint;
+    private Paint paintforText ;
     World w ;
     Handler handler = new Handler() {
         // @Override
@@ -112,8 +114,10 @@ public class WumpusGame extends View {
         this.paint.setAntiAlias(true);
         this.paint.setStyle(Style.STROKE);
         this.paint.setStrokeWidth(5);
+        paintforText = new Paint();
         
-        
+        this.paintforText.setColor(Color.RED);
+        this.paintforText.setTextSize(40);
         l = this.getWidth();
         a = (this.getHeight()-250);
         newWorld();
@@ -193,6 +197,10 @@ public class WumpusGame extends View {
         Bitmap BtnMove = BitmapFactory.decodeResource(getResources(), R.drawable.move);
         Bitmap newBtnMove = Bitmap.createScaledBitmap(BtnMove, this.getWidth()-240, 120, true);
         canvas.drawBitmap(newBtnMove,120 , max_height , paint);
+        String s= " X = "+ w.getPlayerX() ;
+        String s1 = " Y = "+w.getPlayerY();
+        canvas.drawText(s, 120, 120, paintforText);
+        canvas.drawText(s1, 240, 120, paintforText);
         
         super.onDraw(canvas);
     }
