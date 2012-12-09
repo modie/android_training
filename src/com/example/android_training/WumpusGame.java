@@ -74,7 +74,7 @@ public class WumpusGame extends View {
             	try {
 					wait(1000);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
+					
 					e.printStackTrace();
 				}
             default:
@@ -151,8 +151,8 @@ public class WumpusGame extends View {
 	
 	public void newWorld()
 	{
-		int yaw[] = {1};//,4,6,2};
-		int yaw1[]= {6};//,4,0,0};
+		int yaw[] = {0,2,3};
+		int yaw1[]= {4,4,2};
         w = new World(4,6,yaw,yaw1,2,7 , 6 , 6);
         x = w.getSize();
         y = w.getSize();
@@ -246,7 +246,7 @@ public class WumpusGame extends View {
 				{
 					singlesquare[i][y] = new WumpusTreasure(i*xss, y*yss);
 				}
-				//TODO add treasure here :D
+				
 				
 				
 				
@@ -335,7 +335,7 @@ public class WumpusGame extends View {
     public void move()
     {
     	int oldmap[][] = w.getMap();
-    	//TODO add here for treasure WumpusTreasure tres = null ;
+    	
     	int l = w.getLooking();
     	int xprev = w.getPlayerX();
     	int yprev = w.getPlayerY();
@@ -513,7 +513,63 @@ public class WumpusGame extends View {
     	}
     	else if(w.getLooking()==1)
     	{
-    		
+    		move();
+    	}
+    	else if(w.getLooking()==0)
+    	{
+    		rotateLeft();
+    		move();
+    	}
+    	else if(w.getLooking()==-1)
+    	{
+    		rotateLeft();
+    		rotateLeft();
+    		move();
+    	}
+    }
+    public void moveLeft(){
+    	if(w.getLooking()==-1)
+    	{
+    		move();
+    	}
+    	else if(w.getLooking()==2)
+    	{
+    		rotateLeft();
+    		move();
+    	}
+    	else if(w.getLooking()==1)
+    	{
+    		rotateLeft();
+    		rotateLeft();
+    		move();
+    	}
+    	else if(w.getLooking()==0)
+    	{
+    		rotateRight();
+    		move();
+    	}
+    }
+    public void moveDown()
+    {
+    	if(w.getLooking()==0)
+    	{
+    		move();
+    	}
+    	else if(w.getLooking()==1)
+    	{
+    		rotateRight();
+    		move();
+    	}
+    	else if(w.getLooking()==2)
+    	{
+    		rotateRight();
+    		rotateRight();
+    		move();
+    	}
+    	else if(w.getLooking()==-1)
+    	{
+    		rotateLeft();
+    		move();
     	}
     }
  
@@ -522,7 +578,7 @@ public class WumpusGame extends View {
    
  
     //TODO
-    //TODO na valw thisauro 
+    
     //TODO shadows reveal[x][y] (OR MAYBE NOT ?) SURE NOT :D
    
  

@@ -56,7 +56,7 @@ public class WumpusAgent
 		wumpusalive = true ;
 		this.size = size ;
 		r = new WumpusRoom[size][size];
-		for(int i=0 ; i<size ;i ++)
+		for(int i=0 ; i<size  ;i ++)
 		{
 			for(int y = 0 ; y < size ; y++)
 			{
@@ -196,9 +196,13 @@ public class WumpusAgent
 			}
 			else //if no blood
 			{
-				up.setWumpus(false);
+				if(up!=null)
+					up.setWumpus(false);
+				if(down!=null)
 				down.setWumpus(false);
+				if(left!=null)
 				left.setWumpus(false);
+				if(right!=null)
 				right.setWumpus(false);
 			}
 		}
@@ -227,14 +231,18 @@ public class WumpusAgent
 		}
 		else//if no aura,then no pits near
 		{
+			if(up!=null)
 			up.setPit(false);
+			if(down!=null)
 			down.setPit(false);
+			if(left!=null)
 			left.setPit(false);
+			if(right!=null)
 			right.setPit(false);
 		}
 		
 	}
-	protected void possibleMoves()// = reason ,line 454 
+	protected int possibleMoves()// = reason ,line 454 
 	{
 		WumpusRoom left, right ,up,down ;
 		left = getLeftRoom(location);
@@ -244,21 +252,164 @@ public class WumpusAgent
 		
 		//checking for moving right ;
 		//line 577
-		if(right.isWumpus().equals("NO") && right.isPit().equals("NO")
-				&& right.isVisited().equals("NO"))
-		{
-			couldright = 10 ;
+		if(right!=null){
+			if(right.isWumpus().equals("NO") && right.isPit().equals("NO")
+					&& right.isVisited().equals("NO"))
+			{
+				couldright = 10 ;
+			}
+			else if(right.isWumpus().equals("NO") && right.isPit().equals("NO")
+					&& right.isVisited().equals("YES"))
+			{
+				couldright = 10-right.getNumberofvisits() ;
+			}
+			else if (right.isWumpus().equals("YES") || right.isPit().equals("YES"))
+			{
+				couldright = -1 ;
+			}
 		}
-		else if(right.isWumpus().equals("NO") && right.isPit().equals("NO")
-				&& right.isVisited().equals("YES"))
-		{
-			couldright = right.getNumberofvisits() ;
-		}
-		else if (right.isWumpus().equals("YES") && right.isPit().equals("YES"))
-		{
-			couldright = -1 ;
+		else {
+			couldright = -100;
 		}
 		//TODO do the same for up left down line 613
+		if(left!=null){
+			if(left.isWumpus().equals("NO") && left.isPit().equals("NO")
+					&& left.isVisited().equals("NO"))
+			{
+				couldleft = 10 ;
+			}
+			else if(left.isWumpus().equals("NO") && left.isPit().equals("NO")
+					&& left.isVisited().equals("YES"))
+			{
+				couldleft = 10-left.getNumberofvisits() ;
+			}
+			else if (left.isWumpus().equals("YES") || left.isPit().equals("YES"))
+			{
+				couldleft = -1 ;
+			}
+		}
+		else 
+		{
+			couldleft = -100 ;
+		}
+		//doing the same for up
+		if(up!=null){
+			if(up.isWumpus().equals("NO") && up.isPit().equals("NO")
+					&& up.isVisited().equals("NO"))
+			{
+				couldup = 10 ;
+			}
+			else if(up.isWumpus().equals("NO") && up.isPit().equals("NO")
+					&& up.isVisited().equals("YES"))
+			{
+				couldup = 10-up.getNumberofvisits() ;
+			}
+			else if (up.isWumpus().equals("YES") && up.isPit().equals("YES"))
+			{
+				couldup = -1 ;
+			}
+		}
+		else 
+		{
+			couldup = -100 ;
+		}
+		//doing the same for down 
+		if(down!=null){
+			if(down.isWumpus().equals("NO") && down.isPit().equals("NO")
+					&& down.isVisited().equals("NO"))
+			{
+				coulddown = 10 ;
+			}
+			else if(down.isWumpus().equals("NO") && down.isPit().equals("NO")
+					&& down.isVisited().equals("YES"))
+			{
+				coulddown = 10-down.getNumberofvisits() ;
+			}
+			else if (down.isWumpus().equals("YES") && down.isPit().equals("YES"))
+			{
+				coulddown = -1 ;
+			}
+		}
+		else
+		{
+			coulddown = -100;
+		}
+		return getMove(couldright,couldup,couldleft,coulddown);
+		
+		//return getMove(z) ;
+		
 	}
+	private int getMove( int right, int up, int left, int down )
+	{
+		
+		int highest = Integer.MIN_VALUE;
+		if(right == up && up == left && down == left)
+		{
+			return up;
+		}
+		
+		if( ( highest < right && right > 0 ) )
+		{
+			if(right!=-100)
+			{
+				highest = right;
+			}
+		}
+		if( ( highest < up && up > 0 ) )
+		{
+			if(up!=-100)
+			{
+				highest = up;
+			}
+		}
+		if( highest < left && left > 0  )
+		{
+			if(left!=-100)
+			{
+			
+			highest = left;
+			}
+		}
+		if( highest < down && down > 0  )
+		{
+			if(down!=-100)
+			{
+				highest = down;
+			}
+		}
+		int choice = 10 ;
+		if (highest == down){
+			choice = 0;
+		}else if(highest == up){
+			choice = 2;
+		}else if(highest == left){
+			choice = -1 ;
+		}else if( right == 0) {
+			choice = 1 ;
+		}
+		return choice;
+	}
+	public int getMove(int choice)
+	{
+		int i = 10 ;
+		if(choice == couldright)
+		{
+			i =1 ;
+		}
+		else if(choice == couldleft)
+		{
+			i= -1 ;
+		}
+		else if(choice == couldup)
+		{
+			i=  2 ;
+		}
+		else if(choice == coulddown)
+		{
+			i= 0 ;
+		}
+		return i ;
+	}
+	
 	
 }

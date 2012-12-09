@@ -10,10 +10,10 @@ import android.view.WindowManager;
 public class Wumpus extends Activity{
 	WumpusGame wg;
 	WumpusAgent wa ;
-	
+	World w ;
 	int map[][];
 	Thread ourThread = null ;
-	Point p ;
+	Point p ,pnew;
 	Thread t ;
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -24,11 +24,11 @@ public class Wumpus extends Activity{
         getWindowManager().getDefaultDisplay().getMetrics(dm);
 		wg = new WumpusGame(this);
 		setContentView(wg);
-		wg.rotateRight();
-		wg.move();
+		
+		pnew = new Point();
 		p = new Point();
 		map =wg.getMap() ;
-		wa = new WumpusAgent(12);
+		wa = new WumpusAgent(7);
 		t= new Thread(){
 			public void run(){
 				while(true){
@@ -39,15 +39,43 @@ public class Wumpus extends Activity{
 						//wg.makeMove();
 						
 						
-						p = wg.makeMove();  // p wg.makeMove(wa.decide(p.x,p.y));
+						//p = wg.makeMove();  // p wg.makeMove(wa.decide(p.x,p.y));
+						p = wa.getLocation() ;
 						wa.setRoom(p.x, p.y, map[p.x][p.y]);
+						
 						wa.setLocation(p);
-						//update and getting moves 
+						wa.updateField();
 						//then doing moves 
-						if(wa.getRoom(p.x, p.y).isBlood() )
+						if(wa.possibleMoves()==2)
 						{
-							break;
+							wg.moveUp();
+							pnew = new Point(p.x-1,p.y);
+							
 						}
+						else if(wa.possibleMoves()==1)
+						{
+							wg.moveRight();
+							pnew = new Point(p.x,p.y+1);
+						}
+						else if(wa.possibleMoves()==0)
+						{
+							wg.moveDown();
+							pnew = new Point(p.x+1,p.y);
+						}
+						else if(wa.possibleMoves()==-1)
+						{
+							
+							wg.moveLeft();
+							pnew = new Point(p.x,p.y-1);
+						}
+						else if(wa.possibleMoves()==10)
+						{
+							wg.moveUp();
+						}
+						wa.setLocation(pnew);
+						
+						
+						
 						Thread.sleep(500);
 					}catch(InterruptedException e){
 						
@@ -55,7 +83,7 @@ public class Wumpus extends Activity{
 				}
 			}
 		};
-		//t.start();
+		t.start();
 		
 	}
 	@SuppressWarnings("deprecation")
