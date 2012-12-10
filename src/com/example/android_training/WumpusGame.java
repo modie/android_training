@@ -61,6 +61,8 @@ public class WumpusGame extends View {
             case 5:
             	Toast.makeText(getContext(), "Haha fell into pit ", Toast.LENGTH_LONG).show();
             	newWorld();
+            	w.setPlayerX(6);
+            	w.setPlayerY(0);
             	break;
             case 6:
             	Toast.makeText(getContext(), "Haha wumpus made love with ya", Toast.LENGTH_LONG).show();
@@ -169,6 +171,10 @@ public class WumpusGame extends View {
 		setWorld(w) ;
 		
 		
+	}
+	public World getWorld()
+	{
+		return w ;
 	}
 	public int[][] getMap(){
 		return map;

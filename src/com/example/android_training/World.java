@@ -121,6 +121,14 @@ public class World {
 	public int getPlayerY(){
 		return player_pos_y;
 	}
+	public void setPlayerY(int y)
+	{
+		player_pos_y = y ;
+	}
+	public void setPlayerX(int x)
+	{
+		player_pos_x = x ;
+	}
 	public int getLooking(){
 		return looking ;
 	}

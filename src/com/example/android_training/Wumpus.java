@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -28,6 +29,7 @@ public class Wumpus extends Activity{
 		pnew = new Point();
 		p = new Point();
 		map =wg.getMap() ;
+		w = wg.getWorld();
 		wa = new WumpusAgent(7);
 		t= new Thread(){
 			public void run(){
@@ -41,6 +43,13 @@ public class Wumpus extends Activity{
 						
 						//p = wg.makeMove();  // p wg.makeMove(wa.decide(p.x,p.y));
 						p = wa.getLocation() ;
+						if(p.x!=w.getPlayerX()){
+							p.x = w.getPlayerX();
+							
+						}
+						if(p.y!= w.getPlayerY()){
+							p.y = w.getPlayerY();
+						}
 						wa.setRoom(p.x, p.y, map[p.x][p.y]);
 						wa.setVisited(p.x, p.y);
 						wa.incrNumberOfVisits(p.x, p.y);
@@ -74,6 +83,7 @@ public class Wumpus extends Activity{
 							wg.moveUp();
 						}
 						wa.setLocation(pnew);
+						Log.e("yaw"," x= "+pnew.x + " y = "+pnew.y);
 						
 						
 						

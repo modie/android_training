@@ -267,47 +267,44 @@ public class WumpusAgent
 		}
 		if(current.isAura())//checkin for pit 
 		{
-			if(!up.isPit() && !down.isPit() 
-					&& !right.isPit())
+			try
 			{
-				left.setPit(true);
+				if(upleft.isAura() && !left.isPit())
+				{
+					up.setPit(true);
+					Log.e("wtf", "wtf it reached there and nothing done ");
+				}
+				if(upleft.isAura() && left.isPit())
+				{
+					up.setPit(true);
+					Log.e("wtf", "WTFFFFFFFFF ? ");
+				}
+				if(downleft.isAura())
+				{
+					left.setMaybepit(true);
+					down.setMaybepit(true);
+					
+				}
+				if(downright.isAura())
+				{
+					down.setMaybepit(true);
+					right.setMaybepit(true);
+				}
+				if(upright.isAura())
+				{
+					up.setMaybepit(true);
+					right.setMaybepit(true);
+				}
+				if(upleft.isAura() && !up.isPit())
+				{
+					left.setPit(true);
+				}
 			}
-			else if( !up.isPit() && !down.isPit()
-					&& !left.isPit())
+			catch(NullPointerException e)
 			{
-				right.setPit(true);
+				//Log.e("haha", e.toString());
 			}
-			else if( !up.isPit() && !right.isPit()
-					&& !left.isPit())
-			{
-				down.setPit(true);
-			}
-			else if( !down.isPit() && !right.isPit()
-					&& !left.isPit())
-			{
-				up.setPit(true);
-			}
-			if(upleft.isAura() )
-			{
-				left.setMaybepit(true);
-				up.setMaybepit(true);
-			}
-			if(downleft.isAura())
-			{
-				left.setMaybepit(true);
-				down.setMaybepit(true);
-				
-			}
-			if(downright.isAura())
-			{
-				down.setMaybepit(true);
-				right.setMaybepit(true);
-			}
-			if(upright.isAura())
-			{
-				up.setMaybepit(true);
-				right.setMaybepit(true);
-			}
+			
 		}
 		else//if no aura,then no pits near
 		{
@@ -359,7 +356,7 @@ public class WumpusAgent
 		else {
 			couldright = -100;
 		}
-		//TODO do the same for up left down line 613
+		
 		if(left!=null){
 			if(!left.isWumpus() && !left.isPit()
 					&& !left.isVisited())
@@ -373,6 +370,7 @@ public class WumpusAgent
 			}
 			else if(left.isMaybepit() && !left.isVisited())
 			{
+				
 				couldleft = 10 ;
 			}
 			else if(left.isMaybepit() && left.isVisited())
@@ -406,10 +404,12 @@ public class WumpusAgent
 			}
 			else if(up.isMaybepit() && up.isVisited())
 			{
+				Log.e("wtf", "Did it reach dat point ? ");
 				couldup = 10 - up.getNumberofvisits() ;
 			}
 			else if (up.isWumpus() || up.isPit())
 			{
+				Log.e("yaw", "WTF ? ? ? ? went there and still went up ");
 				couldup = -1 ;
 			}
 		}
@@ -429,13 +429,13 @@ public class WumpusAgent
 			{
 				coulddown = 20-down.getNumberofvisits() ;
 			}
-			else if(up.isMaybepit() && !up.isVisited())
+			else if(down.isMaybepit() && !down.isVisited())
 			{
-				couldup = 10 ;
+				coulddown = 10 ;
 			}
-			else if(up.isMaybepit() && up.isVisited())
+			else if(down.isMaybepit() && down.isVisited())
 			{
-				couldup = 10 - up.getNumberofvisits() ;
+				coulddown = 10 - down.getNumberofvisits() ;
 			}
 			else if (down.isWumpus() || down.isPit())
 			{
@@ -446,6 +446,7 @@ public class WumpusAgent
 		{
 			coulddown = -100;
 		}
+		
 		return getMove(couldright,couldup,couldleft,coulddown);
 		
 		//return getMove(z) ;
@@ -531,3 +532,4 @@ public class WumpusAgent
 	
 	
 }
+//TODO recognizing pit but still going up ,dafuq :S
