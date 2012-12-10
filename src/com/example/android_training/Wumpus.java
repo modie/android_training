@@ -42,7 +42,8 @@ public class Wumpus extends Activity{
 						//p = wg.makeMove();  // p wg.makeMove(wa.decide(p.x,p.y));
 						p = wa.getLocation() ;
 						wa.setRoom(p.x, p.y, map[p.x][p.y]);
-						
+						wa.setVisited(p.x, p.y);
+						wa.incrNumberOfVisits(p.x, p.y);
 						wa.setLocation(p);
 						wa.updateField();
 						//then doing moves 
@@ -68,7 +69,7 @@ public class Wumpus extends Activity{
 							wg.moveLeft();
 							pnew = new Point(p.x,p.y-1);
 						}
-						else if(wa.possibleMoves()==10)
+						else if(wa.possibleMoves()==2)
 						{
 							wg.moveUp();
 						}
@@ -76,7 +77,8 @@ public class Wumpus extends Activity{
 						
 						
 						
-						Thread.sleep(500);
+						
+						Thread.sleep(1000);
 					}catch(InterruptedException e){
 						
 					}

@@ -1,6 +1,8 @@
 package com.example.android_training;
 //TODO working at arrayWumpus :D
+//TODO remove Strings from wumpus room and here,then debug :D
 import android.graphics.Point;
+import android.util.Log;
 
 public class WumpusAgent
 {
@@ -104,6 +106,15 @@ public class WumpusAgent
 		
 		
 	}
+	public void incrNumberOfVisits(int x,int y)
+	{
+		r[x][y].incrNumber();
+		
+	}
+	public void setVisited(int x,int y)
+	{
+		r[x][y].setVisited(true);
+	}
 	public void setStartingField(int x ,int y,boolean hasAura,boolean hasBlood)
 	{
 		r[x][y].setVisited(true);
@@ -133,9 +144,31 @@ public class WumpusAgent
 			return null ;
 		}
 	}
+	private WumpusRoom getUpLeftRoom(Point p)
+	{
+		if(p.x-1 >= 0 && p.y-1>=0)
+		{
+			return r[p.x-1][p.y-1];
+		}
+		else 
+		{
+			return null ;
+		}
+	}
+	private WumpusRoom getUpRightRoom(Point p)
+	{
+		if(p.x-1>=0 && p.y+1<size)
+		{
+			return r[p.x-1][p.y+1];
+		}
+		else 
+		{
+			return null ;
+		}
+	}
 	private WumpusRoom getUpRoom(Point p)
 	{
-		if(p.x-1 >0)
+		if(p.x-1 >=0)
 		{
 			return r[p.x-1][p.y];
 			
@@ -157,15 +190,41 @@ public class WumpusAgent
 			return null ;
 		}
 	}
+	private WumpusRoom getDownLeftRoom(Point p)
+	{
+		if(p.x+1 < size && p.y-1>=0)
+		{
+			return r[p.x+1][p.y-1];
+		}
+		else
+		{
+			return null ;
+		}
+	}
+	private WumpusRoom getDownRightRoom(Point p)
+	{
+		if(p.x+1 < size && p.y+1 < size)
+		{
+			return r[p.x+1][p.y+1];
+		}
+		else 
+		{
+			return null ;
+		}
+	}
 	//looking for pit at 400 
 	protected void updateField()
 	{
 		
-		WumpusRoom left ,right , up , down,current ;
+		WumpusRoom left ,right , up , down,current,upleft,upright,downright,downleft ;
 		left = getLeftRoom(location);
 		right = getRightRoom(location);
 		up = getUpRoom(location);
 		down = getDownRoom(location);
+		upleft = getUpLeftRoom(location);
+		upright = getUpRightRoom(location);
+		downright = getDownRightRoom(location);
+		downleft = getDownLeftRoom(location);
 		current = r[location.x][location.y];
 		
 		//checking for wumpus 
@@ -173,23 +232,23 @@ public class WumpusAgent
 		{
 			if(current.isBlood())
 			{
-				if(up.isWumpus().equals("NO") && down.isWumpus().equals("NO") 
-						&& left.isWumpus().equals("NO"))
+				if(!up.isWumpus() && !down.isWumpus()
+						&& !left.isWumpus())
 				{
 					right.setWumpus(true);
 				}
-				else if( up.isWumpus().equals("NO") && down.isWumpus().equals("NO") 
-						&& right.isWumpus().equals("NO"))
+				else if( !up.isWumpus() && !down.isWumpus()
+						&& !right.isWumpus())
 				{
 					left.setWumpus(true);
 				}
-				else if( up.isWumpus().equals("NO") && right.isWumpus().equals("NO") 
-						&& left.isWumpus().equals("NO"))
+				else if( !up.isWumpus() && !right.isWumpus() 
+						&& !left.isWumpus())
 				{
 					down.setWumpus(true);
 				}
-				else if( down.isWumpus().equals("NO") && right.isWumpus().equals("NO")
-						&& left.isWumpus().equals("NO"))
+				else if( !down.isWumpus() && !right.isWumpus()
+						&& !left.isWumpus())
 				{
 					up.setWumpus(true);
 				}
@@ -208,25 +267,46 @@ public class WumpusAgent
 		}
 		if(current.isAura())//checkin for pit 
 		{
-			if(up.isPit().equals("NO") && down.isPit().equals("NO") 
-					&& right.isPit().equals("NO"))
+			if(!up.isPit() && !down.isPit() 
+					&& !right.isPit())
 			{
 				left.setPit(true);
 			}
-			else if( up.isPit().equals("NO") && down.isPit().equals("NO")
-					&& left.isPit().equals("NO"))
+			else if( !up.isPit() && !down.isPit()
+					&& !left.isPit())
 			{
 				right.setPit(true);
 			}
-			else if( up.isPit().equals("NO") && right.isPit().equals("NO")
-					&& left.isPit().equals("NO"))
+			else if( !up.isPit() && !right.isPit()
+					&& !left.isPit())
 			{
 				down.setPit(true);
 			}
-			else if( down.isPit().equals("NO") && right.isPit().equals("NO")
-					&& left.isPit().equals("NO"))
+			else if( !down.isPit() && !right.isPit()
+					&& !left.isPit())
 			{
 				up.setPit(true);
+			}
+			if(upleft.isAura() )
+			{
+				left.setMaybepit(true);
+				up.setMaybepit(true);
+			}
+			if(downleft.isAura())
+			{
+				left.setMaybepit(true);
+				down.setMaybepit(true);
+				
+			}
+			if(downright.isAura())
+			{
+				down.setMaybepit(true);
+				right.setMaybepit(true);
+			}
+			if(upright.isAura())
+			{
+				up.setMaybepit(true);
+				right.setMaybepit(true);
 			}
 		}
 		else//if no aura,then no pits near
@@ -253,17 +333,25 @@ public class WumpusAgent
 		//checking for moving right ;
 		//line 577
 		if(right!=null){
-			if(right.isWumpus().equals("NO") && right.isPit().equals("NO")
-					&& right.isVisited().equals("NO"))
+			if(!right.isWumpus() && !right.isPit()
+					&& !right.isVisited())
+			{
+				couldright = 20 ;
+			}
+			else if(!right.isWumpus() && !right.isPit()
+					&& right.isVisited())
+			{
+				couldright = 20-right.getNumberofvisits() ;
+			}
+			else if(right.isMaybepit() && !right.isVisited())
 			{
 				couldright = 10 ;
 			}
-			else if(right.isWumpus().equals("NO") && right.isPit().equals("NO")
-					&& right.isVisited().equals("YES"))
+			else if(right.isMaybepit() && right.isVisited())
 			{
-				couldright = 10-right.getNumberofvisits() ;
+				couldright = 10 - right.getNumberofvisits() ;
 			}
-			else if (right.isWumpus().equals("YES") || right.isPit().equals("YES"))
+			else if (right.isWumpus() || right.isPit())
 			{
 				couldright = -1 ;
 			}
@@ -273,17 +361,25 @@ public class WumpusAgent
 		}
 		//TODO do the same for up left down line 613
 		if(left!=null){
-			if(left.isWumpus().equals("NO") && left.isPit().equals("NO")
-					&& left.isVisited().equals("NO"))
+			if(!left.isWumpus() && !left.isPit()
+					&& !left.isVisited())
+			{
+				couldleft = 20 ;
+			}
+			else if(!left.isWumpus() && !left.isPit()
+					&& left.isVisited())
+			{
+				couldleft = 20-left.getNumberofvisits() ;
+			}
+			else if(left.isMaybepit() && !left.isVisited())
 			{
 				couldleft = 10 ;
 			}
-			else if(left.isWumpus().equals("NO") && left.isPit().equals("NO")
-					&& left.isVisited().equals("YES"))
+			else if(left.isMaybepit() && left.isVisited())
 			{
-				couldleft = 10-left.getNumberofvisits() ;
+				couldleft = 10 - left.getNumberofvisits() ;
 			}
-			else if (left.isWumpus().equals("YES") || left.isPit().equals("YES"))
+			else if (left.isWumpus() || left.isPit())
 			{
 				couldleft = -1 ;
 			}
@@ -294,17 +390,25 @@ public class WumpusAgent
 		}
 		//doing the same for up
 		if(up!=null){
-			if(up.isWumpus().equals("NO") && up.isPit().equals("NO")
-					&& up.isVisited().equals("NO"))
+			if(!up.isWumpus() && !up.isPit()
+					&& !up.isVisited())
+			{
+				couldup = 20 ;
+			}
+			else if(!up.isWumpus() && !up.isPit()
+					&& up.isVisited())
+			{
+				couldup = 20-up.getNumberofvisits() ;
+			}
+			else if(up.isMaybepit() && !up.isVisited())
 			{
 				couldup = 10 ;
 			}
-			else if(up.isWumpus().equals("NO") && up.isPit().equals("NO")
-					&& up.isVisited().equals("YES"))
+			else if(up.isMaybepit() && up.isVisited())
 			{
-				couldup = 10-up.getNumberofvisits() ;
+				couldup = 10 - up.getNumberofvisits() ;
 			}
-			else if (up.isWumpus().equals("YES") && up.isPit().equals("YES"))
+			else if (up.isWumpus() || up.isPit())
 			{
 				couldup = -1 ;
 			}
@@ -315,17 +419,25 @@ public class WumpusAgent
 		}
 		//doing the same for down 
 		if(down!=null){
-			if(down.isWumpus().equals("NO") && down.isPit().equals("NO")
-					&& down.isVisited().equals("NO"))
+			if(!down.isWumpus() && !down.isPit()
+					&& !down.isVisited())
 			{
-				coulddown = 10 ;
+				coulddown = 20 ;
 			}
-			else if(down.isWumpus().equals("NO") && down.isPit().equals("NO")
-					&& down.isVisited().equals("YES"))
+			else if(!down.isWumpus()&& !down.isPit()
+					&& down.isVisited())			
 			{
-				coulddown = 10-down.getNumberofvisits() ;
+				coulddown = 20-down.getNumberofvisits() ;
 			}
-			else if (down.isWumpus().equals("YES") && down.isPit().equals("YES"))
+			else if(up.isMaybepit() && !up.isVisited())
+			{
+				couldup = 10 ;
+			}
+			else if(up.isMaybepit() && up.isVisited())
+			{
+				couldup = 10 - up.getNumberofvisits() ;
+			}
+			else if (down.isWumpus() || down.isPit())
 			{
 				coulddown = -1 ;
 			}
@@ -353,6 +465,7 @@ public class WumpusAgent
 			if(right!=-100)
 			{
 				highest = right;
+				
 			}
 		}
 		if( ( highest < up && up > 0 ) )
@@ -380,12 +493,16 @@ public class WumpusAgent
 		int choice = 10 ;
 		if (highest == down){
 			choice = 0;
+			
 		}else if(highest == up){
 			choice = 2;
+			
 		}else if(highest == left){
 			choice = -1 ;
-		}else if( right == 0) {
+			
+		}else if( right == highest) {
 			choice = 1 ;
+			
 		}
 		return choice;
 	}
@@ -395,6 +512,7 @@ public class WumpusAgent
 		if(choice == couldright)
 		{
 			i =1 ;
+			
 		}
 		else if(choice == couldleft)
 		{

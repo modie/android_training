@@ -12,8 +12,7 @@ public class WumpusRoom
 	private boolean visited ;
 	private int numberofvisits ;
 	public WumpusRoom(){
-		maybepit= true ;
-		maybewumpus = true ;
+		
 		numberofvisits = 0;
 	}
 	WumpusRoom(boolean empty , boolean pit ,boolean aura , boolean blood ,boolean wumpus,
@@ -34,21 +33,17 @@ public class WumpusRoom
 		}
 		
 	}
-	public String isEmpty()
+	public boolean isEmpty()
 	{
-		if(empty) return "YES";
-		else return "NO";
+		return empty ;
 	}
 	public void setEmpty(boolean empty)
 	{
 		this.empty = empty;
 	}
-	public String isPit()
+	public boolean isPit()
 	{
-		if(pit)
-			return "YES";
-		else if((!pit)&&maybepit) return "MAYBE";
-		else return "NO";
+		return pit ;
 	}
 	public void setPit(boolean pit)
 	{
@@ -79,11 +74,9 @@ public class WumpusRoom
 	{
 		this.maybepit = maybepit;
 	}
-	public String isWumpus()
+	public boolean isWumpus()
 	{
-		if(wumpus)return "YES";
-		else if((!wumpus)&&maybewumpus)return "MAYBE";
-		else return "NO";
+		return wumpus;
 	}
 	public void setWumpus(boolean wumpus)
 	{
@@ -97,10 +90,9 @@ public class WumpusRoom
 	{
 		this.maybewumpus = maybewumpus;
 	}
-	public String isVisited()
+	public boolean isVisited()
 	{
-		if(visited)return "YES";
-		else return "NO";
+		return visited ;
 	}
 	public void setVisited(boolean visited)
 	{
