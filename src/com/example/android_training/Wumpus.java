@@ -53,6 +53,8 @@ public class Wumpus extends Activity{
 						wa.setRoom(p.x, p.y, map[p.x][p.y]);
 						wa.setVisited(p.x, p.y);
 						wa.incrNumberOfVisits(p.x, p.y);
+						
+						Log.e("yaw", "bstrds number of visits is "+wa.getNumberOfVisits(p.x, p.y));
 						wa.setLocation(p);
 						wa.updateField();
 						//then doing moves 
@@ -83,7 +85,7 @@ public class Wumpus extends Activity{
 							wg.moveUp();
 						}
 						wa.setLocation(pnew);
-						Log.e("yaw"," x= "+pnew.x + " y = "+pnew.y);
+						
 						
 						
 						

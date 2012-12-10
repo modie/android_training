@@ -111,6 +111,10 @@ public class WumpusAgent
 		r[x][y].incrNumber();
 		
 	}
+	public int getNumberOfVisits(int x,int y)
+	{
+		return r[x][y].getNumberofvisits();
+	}
 	public void setVisited(int x,int y)
 	{
 		r[x][y].setVisited(true);
@@ -267,43 +271,171 @@ public class WumpusAgent
 		}
 		if(current.isAura())//checkin for pit 
 		{
-			try
-			{
-				if(upleft.isAura() && !left.isPit())
-				{
-					up.setPit(true);
-					Log.e("wtf", "wtf it reached there and nothing done ");
+			//TODO check all for nulls 
+			if(up!=null ){
+				if(upleft!=null){
+					if(upleft.isAura() && !left.isPit())
+					{
+						up.setPit(true);
+						
+					}
+					if(upleft.isAura() && !up.isPit())
+					{
+						left.setPit(true);
+					}
 				}
-				if(upleft.isAura() && left.isPit())
+				else //if upleft == null -> left == null -> downleft == null
 				{
-					up.setPit(true);
-					Log.e("wtf", "WTFFFFFFFFF ? ");
+					if(upright.isAura() && downright.isAura())
+					{
+						right.setPit(true);
+					}
+					else if(upright.isAura())//goes there if downright is not aura 
+					{
+						up.setPit(true);
+					}
+					else // if upright is not aura,then downright has to be :D
+					{
+						down.setPit(true);
+					}
 				}
+				if(upright!=null){
+					if(upright.isAura() && !up.isPit())
+					{
+						right.setPit(true);
+					}
+					if(upright.isAura() && !right.isPit())
+					{
+						up.setPit(true);
+					}
+				}
+				else//if upright ==null
+				{
+					if(upleft.isAura() && downleft.isAura())
+					{
+						left.setPit(true);
+					}
+					else if(upleft.isAura())
+					{
+						up.setPit(true);
+					}
+					else
+					{
+						down.setPit(true);
+					}
+				}
+			}
+			else //if up == null
+			{ 
 				if(downleft.isAura())
-				{
-					left.setMaybepit(true);
-					down.setMaybepit(true);
-					
-				}
-				if(downright.isAura())
-				{
-					down.setMaybepit(true);
-					right.setMaybepit(true);
-				}
-				if(upright.isAura())
-				{
-					up.setMaybepit(true);
-					right.setMaybepit(true);
-				}
-				if(upleft.isAura() && !up.isPit())
 				{
 					left.setPit(true);
 				}
+				else if(downright.isAura())
+				{
+					right.setPit(true);
+				}
 			}
-			catch(NullPointerException e)
+			if(down!=null)
 			{
-				//Log.e("haha", e.toString());
+				if(downleft!=null){
+					if(downleft.isAura() && !down.isPit())
+					{
+						left.setPit(true);
+					}
+					if(downleft.isAura() && !left.isPit())
+					{
+						down.setPit(true);
+					}
+				}
+				else // if downleft == null and down not null -> left =null -> upleft ==null
+				{
+					if(downright.isAura() && upright.isAura())
+					{
+						right.setPit(true);
+					}
+					else if(downright.isAura())//goes there if upright is not aura
+					{
+						down.setPit(true);
+					}
+					else 
+					{
+						up.setPit(true);
+					}
+				}
+				if(downright!=null){
+					if(downright.isAura() && !down.isPit())
+					{
+						right.setPit(true);
+					}
+					if(downright.isAura() && !right.isPit())
+					{
+						down.setPit(true);
+					}
+				}
+				else //if downright ==null
+				{
+					if(downleft.isAura() && upleft.isAura())
+					{
+						left.setPit(true);
+					}
+					else if(upleft.isAura())
+					{
+						up.setPit(true);
+					}
+					else 
+					{
+						down.setPit(true);
+					}
+				}
+				
 			}
+			else // down == null  
+			{
+				if(upleft.isAura())
+				{
+					left.setPit(true);
+					
+				}
+				else if(upright.isAura())
+				{
+					right.setPit(true);
+				}
+				
+			}
+			
+			/*if(downleft.isAura())
+			{
+				left.setMaybepit(true);
+				down.setMaybepit(true);
+				
+			}
+			if(downright.isAura())
+			{
+				down.setMaybepit(true);
+				right.setMaybepit(true);
+			}
+			if(upright.isAura())
+			{
+				up.setMaybepit(true);
+				right.setMaybepit(true);
+			}
+			*/
+			
+			if(up!=null)
+				if(up.getNumberofvisits()==0)
+					up.setMaybepit(true);
+			if(down!=null)
+				if(down.getNumberofvisits()==0)
+					down.setMaybepit(true);
+			if(left!=null)
+				if(left.getNumberofvisits()==0)
+					left.setMaybepit(true);
+			if(right!=null)
+				if(right.getNumberofvisits()==0)
+					right.setMaybepit(true);
+			
+			
 			
 		}
 		else//if no aura,then no pits near
@@ -409,7 +541,6 @@ public class WumpusAgent
 			}
 			else if (up.isWumpus() || up.isPit())
 			{
-				Log.e("yaw", "WTF ? ? ? ? went there and still went up ");
 				couldup = -1 ;
 			}
 		}
