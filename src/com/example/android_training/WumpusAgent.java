@@ -10,7 +10,7 @@ public class WumpusAgent
 	protected Point location ;
 	protected int size ;
 	WumpusRoom [][]r ;
-	int couldright , couldleft,couldup,coulddown ;
+	int couldright , couldleft,couldup,coulddown ,returnback;
 	int choice ;
 	// 2 for up , 1 for right , -1 for left, 0 for down 
 	public Point getLocation()
@@ -234,6 +234,8 @@ public class WumpusAgent
 		//checking for wumpus 
 		if(wumpusalive)
 		{
+			//TODO code for wumpus
+			/*
 			if(current.isBlood())
 			{
 				if(!up.isWumpus() && !down.isWumpus()
@@ -268,18 +270,19 @@ public class WumpusAgent
 				if(right!=null)
 				right.setWumpus(false);
 			}
+			*/
 		}
 		if(current.isAura())//checkin for pit 
 		{
 			//TODO check all for nulls 
 			if(up!=null ){
 				if(upleft!=null){
-					if(upleft.isAura() && !left.isPit())
+					if(upleft.isAura() && left.isVisited())
 					{
 						up.setPit(true);
 						
 					}
-					if(upleft.isAura() && !up.isPit())
+					if(upleft.isAura() && up.isVisited())
 					{
 						left.setPit(true);
 					}
@@ -300,17 +303,18 @@ public class WumpusAgent
 					}
 				}
 				if(upright!=null){
-					if(upright.isAura() && !up.isPit())
+					if(upright.isAura() && up.isVisited())
 					{
 						right.setPit(true);
 					}
-					if(upright.isAura() && !right.isPit())
+					if(upright.isAura() && right.isVisited())
 					{
 						up.setPit(true);
 					}
 				}
 				else//if upright ==null
 				{
+					//TODO periptwseis gia down == null 
 					if(upleft.isAura() && downleft.isAura())
 					{
 						left.setPit(true);
@@ -339,11 +343,12 @@ public class WumpusAgent
 			if(down!=null)
 			{
 				if(downleft!=null){
-					if(downleft.isAura() && !down.isPit())
+					//TODO
+					if(downleft.isAura() && down.isVisited())
 					{
 						left.setPit(true);
 					}
-					if(downleft.isAura() && !left.isPit())
+					if(downleft.isAura() && left.isVisited())
 					{
 						down.setPit(true);
 					}
@@ -364,11 +369,11 @@ public class WumpusAgent
 					}
 				}
 				if(downright!=null){
-					if(downright.isAura() && !down.isPit())
+					if(downright.isAura() && down.isVisited())
 					{
 						right.setPit(true);
 					}
-					if(downright.isAura() && !right.isPit())
+					if(downright.isAura() && right.isVisited())
 					{
 						down.setPit(true);
 					}
@@ -400,6 +405,9 @@ public class WumpusAgent
 				else if(upright.isAura())
 				{
 					right.setPit(true);
+				}
+				else{
+					right.setMaybepit(true);
 				}
 				
 			}
@@ -441,13 +449,25 @@ public class WumpusAgent
 		else//if no aura,then no pits near
 		{
 			if(up!=null)
-			up.setPit(false);
+			{
+				up.setPit(false);
+				up.setMaybepit(false);
+			}
 			if(down!=null)
-			down.setPit(false);
+			{
+				down.setPit(false);
+				down.setMaybepit(false);
+			}
 			if(left!=null)
-			left.setPit(false);
+			{
+				left.setMaybepit(false);
+				left.setPit(false);
+			}
 			if(right!=null)
-			right.setPit(false);
+			{
+				right.setPit(false);
+				right.setMaybepit(false);
+			}
 		}
 		
 	}
@@ -467,20 +487,16 @@ public class WumpusAgent
 			{
 				couldright = 20 ;
 			}
-			else if(!right.isWumpus() && !right.isPit()
+			if(!right.isWumpus() && !right.isPit()
 					&& right.isVisited())
 			{
 				couldright = 20-right.getNumberofvisits() ;
 			}
-			else if(right.isMaybepit() && !right.isVisited())
+			if(right.isMaybepit() && !right.isVisited())
 			{
 				couldright = 10 ;
 			}
-			else if(right.isMaybepit() && right.isVisited())
-			{
-				couldright = 10 - right.getNumberofvisits() ;
-			}
-			else if (right.isWumpus() || right.isPit())
+			if (right.isWumpus() || right.isPit())
 			{
 				couldright = -1 ;
 			}
@@ -495,21 +511,17 @@ public class WumpusAgent
 			{
 				couldleft = 20 ;
 			}
-			else if(!left.isWumpus() && !left.isPit()
+			if(!left.isWumpus() && !left.isPit()
 					&& left.isVisited())
 			{
 				couldleft = 20-left.getNumberofvisits() ;
 			}
-			else if(left.isMaybepit() && !left.isVisited())
+			if(left.isMaybepit() && !left.isVisited())
 			{
 				
 				couldleft = 10 ;
 			}
-			else if(left.isMaybepit() && left.isVisited())
-			{
-				couldleft = 10 - left.getNumberofvisits() ;
-			}
-			else if (left.isWumpus() || left.isPit())
+			if (left.isWumpus() || left.isPit())
 			{
 				couldleft = -1 ;
 			}
@@ -530,16 +542,11 @@ public class WumpusAgent
 			{
 				couldup = 20-up.getNumberofvisits() ;
 			}
-			else if(up.isMaybepit() && !up.isVisited())
+			if(up.isMaybepit() && !up.isVisited())
 			{
 				couldup = 10 ;
 			}
-			else if(up.isMaybepit() && up.isVisited())
-			{
-				Log.e("wtf", "Did it reach dat point ? ");
-				couldup = 10 - up.getNumberofvisits() ;
-			}
-			else if (up.isWumpus() || up.isPit())
+			if (up.isWumpus() || up.isPit())
 			{
 				couldup = -1 ;
 			}
@@ -555,19 +562,16 @@ public class WumpusAgent
 			{
 				coulddown = 20 ;
 			}
-			else if(!down.isWumpus()&& !down.isPit()
+			if(!down.isWumpus()&& !down.isPit()
 					&& down.isVisited())			
 			{
 				coulddown = 20-down.getNumberofvisits() ;
 			}
-			else if(down.isMaybepit() && !down.isVisited())
+			if(down.isMaybepit() && !down.isVisited())
 			{
 				coulddown = 10 ;
 			}
-			else if(down.isMaybepit() && down.isVisited())
-			{
-				coulddown = 10 - down.getNumberofvisits() ;
-			}
+			
 			else if (down.isWumpus() || down.isPit())
 			{
 				coulddown = -1 ;
@@ -659,6 +663,62 @@ public class WumpusAgent
 			i= 0 ;
 		}
 		return i ;
+	}
+	public void FindPits()
+	{
+		for(int i=0;i<size ; i++)
+		{
+			for(int j=0;j<size  ; j++)
+			{
+				if(r[i][j].isPit())
+				{
+					Log.e("pit"," x = "+i+ " y = "+j);
+				}
+				if(r[i][j].isMaybepit())
+				{
+					Log.e("maybepit","x = "+i+" y= "+j);
+				}
+			}
+		}
+	}
+	public void initializeVars()
+	{
+		coulddown = 0;
+		couldup =0 ;
+		couldleft =0 ;
+		couldright = 0;
+	}
+	public void AboutPosition()
+	{
+		WumpusRoom up ,down,left,right ;
+		up =getUpRoom(location);
+		down =getDownRoom(location);
+		left = getLeftRoom(location);
+		right = getRightRoom(location);
+		String s = "my current position is ("+location.x+","+location.y+")\n";
+		if(up!=null){
+		if(up.isPit()){
+			s+= "up room is a pit ";
+		}}
+		if(down!=null){
+		if(down.isPit())
+		{
+			s+= "down room is a pit";
+		}
+		}
+		if(right!=null){
+		if(right.isPit())
+		{
+			s+= "right room is a pit ";
+		}
+		}
+		if(left!=null){
+		if(left.isPit())
+		{
+			s+= "left room is a pit";
+		}
+		}
+		Log.e("yaw", s);
 	}
 	
 	

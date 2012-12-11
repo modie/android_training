@@ -153,8 +153,9 @@ public class WumpusGame extends View {
 	
 	public void newWorld()
 	{
-		int yaw[] = {0,2,3};
-		int yaw1[]= {4,4,2};
+		//TODO add back wumpus and treasure :D
+		int yaw[] = {2,3,0};//x
+		int yaw1[]= {4,2,5};//y
         w = new World(4,6,yaw,yaw1,2,7 , 6 , 6);
         x = w.getSize();
         y = w.getSize();

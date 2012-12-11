@@ -54,7 +54,7 @@ public class Wumpus extends Activity{
 						wa.setVisited(p.x, p.y);
 						wa.incrNumberOfVisits(p.x, p.y);
 						
-						Log.e("yaw", "bstrds number of visits is "+wa.getNumberOfVisits(p.x, p.y));
+						wa.FindPits();
 						wa.setLocation(p);
 						wa.updateField();
 						//then doing moves 
@@ -84,8 +84,9 @@ public class Wumpus extends Activity{
 						{
 							wg.moveUp();
 						}
+						wa.AboutPosition();
 						wa.setLocation(pnew);
-						
+						wa.initializeVars();
 						
 						
 						
