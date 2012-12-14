@@ -50,13 +50,18 @@ public class Wumpus extends Activity{
 						if(p.y!= w.getPlayerY()){
 							p.y = w.getPlayerY();
 						}
+						
 						wa.setRoom(p.x, p.y, map[p.x][p.y]);
 						wa.setVisited(p.x, p.y);
 						wa.incrNumberOfVisits(p.x, p.y);
 						
-						wa.FindPits();
+						
 						wa.setLocation(p);
+						
 						wa.updateField();
+						wa.initializeValues();
+						wa.AboutPosition();
+						wa.FindPits();
 						//then doing moves 
 						if(wa.possibleMoves()==2)
 						{
@@ -80,11 +85,15 @@ public class Wumpus extends Activity{
 							wg.moveLeft();
 							pnew = new Point(p.x,p.y-1);
 						}
-						else if(wa.possibleMoves()==2)
+						else if(wa.possibleMoves()==10)
 						{
-							wg.moveUp();
+							Log.e("wtf", "wtf why is it 10 ?");
 						}
-						wa.AboutPosition();
+						else
+						{
+							Log.e("wtf","trully a wtf moment");
+							//TODO see for maybepits,and make a method that will eliminate maybepits 
+						}
 						wa.setLocation(pnew);
 						wa.initializeVars();
 						

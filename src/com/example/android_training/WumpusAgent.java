@@ -1,6 +1,7 @@
 package com.example.android_training;
-//TODO working at arrayWumpus :D
-//TODO remove Strings from wumpus room and here,then debug :D
+
+import java.util.Random;
+
 import android.graphics.Point;
 import android.util.Log;
 
@@ -274,7 +275,9 @@ public class WumpusAgent
 		}
 		if(current.isAura())//checkin for pit 
 		{
-			//TODO check all for nulls 
+			//TODO check for sides and etc 
+			//maybe if i create a class that will hold 
+			//wumpuspits , and will tell,if maybepits are right or wrong 
 			if(up!=null ){
 				if(upleft!=null){
 					if(upleft.isAura() && left.isVisited())
@@ -314,36 +317,55 @@ public class WumpusAgent
 				}
 				else//if upright ==null
 				{
-					//TODO periptwseis gia down == null 
-					if(upleft.isAura() && downleft.isAura())
+					if(down!=null)
 					{
-						left.setPit(true);
-					}
-					else if(upleft.isAura())
-					{
-						up.setPit(true);
+						if(upleft.isAura() && downleft.isAura())
+						{
+							left.setPit(true);
+						}
+						else if(upleft.isAura())
+						{
+							up.setPit(true);
+						}
+						else
+						{
+							down.setPit(true);
+						}
 					}
 					else
 					{
-						down.setPit(true);
+						if(upleft.isAura() && up.isVisited())
+						{
+							left.setPit(true);
+						}
+						else if(upleft.isAura() && left.isVisited())
+						{
+							up.setPit(true);
+						}
 					}
 				}
 			}
 			else //if up == null
 			{ 
-				if(downleft.isAura())
+				if(downleft!=null)
 				{
-					left.setPit(true);
+					if(downleft.isAura())
+					{
+						left.setPit(true);
+					}
 				}
-				else if(downright.isAura())
+				else if(downright!=null)
 				{
-					right.setPit(true);
+					if(downright.isAura())
+					{
+						right.setPit(true);
+					}
 				}
 			}
 			if(down!=null)
 			{
 				if(downleft!=null){
-					//TODO
+					
 					if(downleft.isAura() && down.isVisited())
 					{
 						left.setPit(true);
@@ -380,6 +402,7 @@ public class WumpusAgent
 				}
 				else //if downright ==null
 				{
+					
 					if(downleft.isAura() && upleft.isAura())
 					{
 						left.setPit(true);
@@ -397,17 +420,26 @@ public class WumpusAgent
 			}
 			else // down == null  
 			{
-				if(upleft.isAura())
+				if(upleft!=null)
 				{
-					left.setPit(true);
-					
+					if(upleft.isAura())
+					{
+						left.setPit(true);
+					}
 				}
-				else if(upright.isAura())
+				else if(upright!=null)
 				{
-					right.setPit(true);
+					if(upright.isAura())
+					{
+						right.setPit(true);
+					}
 				}
-				else{
+				else
+				{
+					if(right!=null)
+					{
 					right.setMaybepit(true);
+					}
 				}
 				
 			}
@@ -467,6 +499,26 @@ public class WumpusAgent
 			{
 				right.setPit(false);
 				right.setMaybepit(false);
+			}
+		}
+		if(current.isMaybepit())
+		{
+			current.setMaybepit(false);
+		}
+		
+	}
+	public void initializeValues()
+	{
+		for(int i = 0;i<size ; i++)
+		{
+			for(int j = 0 ; j<size ; j++)
+			{
+				if(r[i][j].isVisited())
+				{
+					r[i][j].setPit(false);
+					r[i][j].setMaybepit(false);
+					
+				}
 			}
 		}
 		
@@ -589,12 +641,15 @@ public class WumpusAgent
 	}
 	private int getMove( int right, int up, int left, int down )
 	{
-		
+		//TODO add random  for movement if they are the same :D
+		Random r = new Random();
 		int highest = Integer.MIN_VALUE;
 		if(right == up && up == left && down == left)
 		{
+			
 			return up;
 		}
+		
 		
 		if( ( highest < right && right > 0 ) )
 		{
@@ -640,6 +695,7 @@ public class WumpusAgent
 			choice = 1 ;
 			
 		}
+		Log.e("yaw", "choice is "+choice);
 		return choice;
 	}
 	public int getMove(int choice)
@@ -696,31 +752,39 @@ public class WumpusAgent
 		left = getLeftRoom(location);
 		right = getRightRoom(location);
 		String s = "my current position is ("+location.x+","+location.y+")\n";
-		if(up!=null){
-		if(up.isPit()){
-			s+= "up room is a pit ";
-		}}
-		if(down!=null){
-		if(down.isPit())
+		/*
+		if(up!=null)
 		{
-			s+= "down room is a pit";
+			if(up.isPit()){
+				s+= "up room is a pit ";
+			}
 		}
-		}
-		if(right!=null){
-		if(right.isPit())
+		if(down!=null)
 		{
-			s+= "right room is a pit ";
+			if(down.isPit())
+			{
+				s+= "down room is a pit";
+			}
 		}
-		}
-		if(left!=null){
-		if(left.isPit())
+		if(right!=null)
 		{
-			s+= "left room is a pit";
+			if(right.isPit())
+			{
+				s+= "right room is a pit ";
+			}
 		}
+		if(left!=null)
+		{
+			if(left.isPit())
+			{
+				s+= "left room is a pit";
+			}
 		}
+		*/
+		s += "\n Currents rooms visits are "+r[location.x][location.y].getNumberofvisits();
 		Log.e("yaw", s);
 	}
 	
 	
 }
-//TODO recognizing pit but still going up ,dafuq :S
+
